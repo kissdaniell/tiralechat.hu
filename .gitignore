@@ -1,0 +1,10 @@
+node_modules
+dist
+.DS_Store
+
+# raw source pictures, not used by the site
+_originals
+# rendered reel
+video/out
+# local editor/tool config
+.claude

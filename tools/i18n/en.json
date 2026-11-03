@@ -1,0 +1,1185 @@
+[
+ {
+  "where": "Fejléc (head) – SEO",
+  "kind": "Oldalcím (title)",
+  "source": "<title>",
+  "hu": "Tira Le Chat – egyedi tetoválás Budapesten | Tira Tattoo",
+  "en": "Tira Le Chat – custom tattoos in Budapest | Tira Tattoo"
+ },
+ {
+  "where": "Fejléc (head) – SEO",
+  "kind": "Meta leírás",
+  "source": "meta name=\"description\"",
+  "hu": "Tira Le Chat egyedi tetoválásai Budapesten: 10+ év tapasztalat, mixed style és színes munkák, foglalható minták, festmények. Írd meg, mire gondolsz!",
+  "en": "Custom tattoos by Tira Le Chat in Budapest: 10+ years of experience, mixed style and colorful work, available designs, paintings. Tell me what you have in mind!"
+ },
+ {
+  "where": "Fejléc (head) – SEO",
+  "kind": "Szerző",
+  "source": "meta name=\"author\"",
+  "hu": "Tira Le Chat - Mácsai Krisztina",
+  "en": "Tira Le Chat - Mácsai Krisztina"
+ },
+ {
+  "where": "Fejléc (head) – megosztás",
+  "kind": "Open Graph",
+  "source": "meta property=\"og:title\"",
+  "hu": "Tira Le Chat – egyedi tetoválás Budapesten | Tira Tattoo",
+  "en": "Tira Le Chat – custom tattoos in Budapest | Tira Tattoo"
+ },
+ {
+  "where": "Fejléc (head) – megosztás",
+  "kind": "Open Graph",
+  "source": "meta property=\"og:description\"",
+  "hu": "Tira Le Chat egyedi tetoválásai Budapesten: 10+ év tapasztalat, mixed style és színes munkák, foglalható minták, festmények. Írd meg, mire gondolsz!",
+  "en": "Custom tattoos by Tira Le Chat in Budapest: 10+ years of experience, mixed style and colorful work, available designs, paintings. Tell me what you have in mind!"
+ },
+ {
+  "where": "Fejléc (head) – megosztás",
+  "kind": "Open Graph",
+  "source": "meta property=\"og:site_name\"",
+  "hu": "Tira Tattoo",
+  "en": "Tira Tattoo"
+ },
+ {
+  "where": "Fejléc (head) – megosztás",
+  "kind": "Open Graph",
+  "source": "meta property=\"og:image:alt\"",
+  "hu": "Tira Le Chat tetoválóművész — Ne csak álmodozz! Varrjuk fel!",
+  "en": "Tira Le Chat tattoo artist — Don't just dream it! Get inked!"
+ },
+ {
+  "where": "Fejléc (head) – megosztás",
+  "kind": "Twitter kártya",
+  "source": "meta name=\"twitter:title\"",
+  "hu": "Tira Le Chat – egyedi tetoválás Budapesten | Tira Tattoo",
+  "en": "Tira Le Chat – custom tattoos in Budapest | Tira Tattoo"
+ },
+ {
+  "where": "Fejléc (head) – megosztás",
+  "kind": "Twitter kártya",
+  "source": "meta name=\"twitter:description\"",
+  "hu": "Tira Le Chat egyedi tetoválásai Budapesten: 10+ év tapasztalat, mixed style és színes munkák, foglalható minták, festmények. Írd meg, mire gondolsz!",
+  "en": "Custom tattoos by Tira Le Chat in Budapest: 10+ years of experience, mixed style and colorful work, available designs, paintings. Tell me what you have in mind!"
+ },
+ {
+  "where": "Fejléc (head) – strukturált adat",
+  "kind": "JSON-LD",
+  "source": "ld+json \"name\"",
+  "hu": "Tira Tattoo — Tira Le Chat",
+  "en": "Tira Tattoo — Tira Le Chat"
+ },
+ {
+  "where": "Fejléc (head) – strukturált adat",
+  "kind": "JSON-LD",
+  "source": "ld+json \"alternateName\"",
+  "hu": "Tira Le Chat",
+  "en": "Tira Le Chat"
+ },
+ {
+  "where": "Fejléc (head) – strukturált adat",
+  "kind": "JSON-LD",
+  "source": "ld+json \"description\"",
+  "hu": "Tira Le Chat egyedi tetoválásai Budapesten: 10+ év tapasztalat, mixed style és színes munkák, foglalható minták, festmények. Írd meg, mire gondolsz!",
+  "en": "Custom tattoos by Tira Le Chat in Budapest: 10+ years of experience, mixed style and colorful work, available designs, paintings. Tell me what you have in mind!"
+ },
+ {
+  "where": "Előtöltő (preloader)",
+  "kind": "Szöveg",
+  "source": "span.pl-ink",
+  "hu": "Varrjuk fel!",
+  "en": "Get inked!"
+ },
+ {
+  "where": "Fejléc (logó, menü, social)",
+  "kind": "Kép leírása (alt)",
+  "source": "img logo.webp",
+  "hu": "Tira Tattoo — Tira Le Chat",
+  "en": "Tira Tattoo — Tira Le Chat"
+ },
+ {
+  "where": "Fejléc (logó, menü, social)",
+  "kind": "Szöveg",
+  "source": "a",
+  "hu": "Hello",
+  "en": "Hello"
+ },
+ {
+  "where": "Fejléc (logó, menü, social)",
+  "kind": "Szöveg",
+  "source": "a",
+  "hu": "Munkáim",
+  "en": "My work"
+ },
+ {
+  "where": "Fejléc (logó, menü, social)",
+  "kind": "Szöveg",
+  "source": "a",
+  "hu": "Foglalható",
+  "en": "WannaDo"
+ },
+ {
+  "where": "Fejléc (logó, menü, social)",
+  "kind": "Szöveg",
+  "source": "a",
+  "hu": "Festmények",
+  "en": "Paintings"
+ },
+ {
+  "where": "Fejléc (logó, menü, social)",
+  "kind": "Szöveg",
+  "source": "a",
+  "hu": "Mi újság?",
+  "en": "What's new?"
+ },
+ {
+  "where": "Fejléc (logó, menü, social)",
+  "kind": "Szöveg",
+  "source": "a",
+  "hu": "Kapcsolat",
+  "en": "Contact"
+ },
+ {
+  "where": "Fejléc (logó, menü, social)",
+  "kind": "Címke képernyőolvasónak (aria-label)",
+  "source": "a.social-btn",
+  "hu": "Instagram",
+  "en": "Instagram"
+ },
+ {
+  "where": "Fejléc (logó, menü, social)",
+  "kind": "Címke képernyőolvasónak (aria-label)",
+  "source": "a.social-btn",
+  "hu": "Facebook",
+  "en": "Facebook"
+ },
+ {
+  "where": "Fejléc (logó, menü, social)",
+  "kind": "Címke képernyőolvasónak (aria-label)",
+  "source": "a.social-btn",
+  "hu": "E-mail",
+  "en": "E-mail"
+ },
+ {
+  "where": "Fejléc (logó, menü, social)",
+  "kind": "Címke képernyőolvasónak (aria-label)",
+  "source": "button.menu-toggle",
+  "hu": "Menü megnyitása",
+  "en": "Open menu"
+ },
+ {
+  "where": "Mobil menü",
+  "kind": "Címke képernyőolvasónak (aria-label)",
+  "source": "div.mobile-menu",
+  "hu": "Menü",
+  "en": "Menu"
+ },
+ {
+  "where": "Mobil menü",
+  "kind": "Szöveg",
+  "source": "p.mm-place",
+  "hu": "Budapest",
+  "en": "Budapest"
+ },
+ {
+  "where": "Mobil menü",
+  "kind": "Kép leírása (alt)",
+  "source": "img logo.webp",
+  "hu": "Tira Tattoo — Tira Le Chat",
+  "en": "Tira Tattoo — Tira Le Chat"
+ },
+ {
+  "where": "Mobil menü",
+  "kind": "Címke képernyőolvasónak (aria-label)",
+  "source": "a.social-btn",
+  "hu": "Instagram",
+  "en": "Instagram"
+ },
+ {
+  "where": "Mobil menü",
+  "kind": "Címke képernyőolvasónak (aria-label)",
+  "source": "a.social-btn",
+  "hu": "Facebook",
+  "en": "Facebook"
+ },
+ {
+  "where": "Mobil menü",
+  "kind": "Címke képernyőolvasónak (aria-label)",
+  "source": "a.social-btn",
+  "hu": "E-mail",
+  "en": "E-mail"
+ },
+ {
+  "where": "Mobil menü",
+  "kind": "Címke képernyőolvasónak (aria-label)",
+  "source": "nav.mm-nav",
+  "hu": "Menü",
+  "en": "Menu"
+ },
+ {
+  "where": "Mobil menü",
+  "kind": "Szöveg",
+  "source": "a.mm-item.mm-item--1",
+  "hu": "Hello",
+  "en": "Hello"
+ },
+ {
+  "where": "Mobil menü",
+  "kind": "Szöveg",
+  "source": "a.mm-item.mm-item--2",
+  "hu": "Munkáim",
+  "en": "My work"
+ },
+ {
+  "where": "Mobil menü",
+  "kind": "Szöveg",
+  "source": "a.mm-item.mm-item--3",
+  "hu": "Foglalható",
+  "en": "WannaDo"
+ },
+ {
+  "where": "Mobil menü",
+  "kind": "Szöveg",
+  "source": "a.mm-item.mm-item--4",
+  "hu": "Festmények",
+  "en": "Paintings"
+ },
+ {
+  "where": "Mobil menü",
+  "kind": "Szöveg",
+  "source": "a.mm-item.mm-item--5",
+  "hu": "Mi újság?",
+  "en": "What's new?"
+ },
+ {
+  "where": "Mobil menü",
+  "kind": "Szöveg",
+  "source": "a.mm-item.mm-item--6",
+  "hu": "Kapcsolat",
+  "en": "Contact"
+ },
+ {
+  "where": "Mobil menü",
+  "kind": "Szöveg",
+  "source": "span.contact-hint-text",
+  "hu": "katt a másoláshoz",
+  "en": "click to copy"
+ },
+ {
+  "where": "Mobil menü",
+  "kind": "Szöveg",
+  "source": "button.contact-mail.mm-mail",
+  "hu": "krisztina.macsai@gmail.com",
+  "en": "krisztina.macsai@gmail.com"
+ },
+ {
+  "where": "Mobil menü",
+  "kind": "Címke képernyőolvasónak (aria-label)",
+  "source": "button.mm-close",
+  "hu": "Menü bezárása",
+  "en": "Close menu"
+ },
+ {
+  "where": "1. Hero (Hello)",
+  "kind": "Szöveg",
+  "source": "span.mole-bubble-text",
+  "hu": "Görgess lefelé!\nHidd el, jó lesz!",
+  "en": "Scroll down!\nIt'll be good!"
+ },
+ {
+  "where": "1. Hero (Hello)",
+  "kind": "Szöveg",
+  "source": "span.ink",
+  "hu": "Ne csak",
+  "en": "Don't just"
+ },
+ {
+  "where": "1. Hero (Hello)",
+  "kind": "Szöveg",
+  "source": "span.ink",
+  "hu": "álmodozz!",
+  "en": "dreamin'!"
+ },
+ {
+  "where": "Szakaszcímek (a főcím helyén váltakoznak)",
+  "kind": "Szöveg",
+  "source": "span.ink",
+  "hu": "Munkáim",
+  "en": "My work"
+ },
+ {
+  "where": "Szakaszcímek (a főcím helyén váltakoznak)",
+  "kind": "Szöveg",
+  "source": "span.title-sub",
+  "hu": "10+ év gyakorlás.\nErre futotta.",
+  "en": "10+ years of practice.\nThis is what I've got."
+ },
+ {
+  "where": "Szakaszcímek (a főcím helyén váltakoznak)",
+  "kind": "Szöveg",
+  "source": "span.ink",
+  "hu": "Foglalható",
+  "en": "WannaDo"
+ },
+ {
+  "where": "Szakaszcímek (a főcím helyén váltakoznak)",
+  "kind": "Szöveg",
+  "source": "span.title-sub",
+  "hu": "Ez akár rád is kerülhet,\nha bevállalod.",
+  "en": "This could be\nyour next tattoo."
+ },
+ {
+  "where": "Szakaszcímek (a főcím helyén váltakoznak)",
+  "kind": "Szöveg",
+  "source": "span.ink",
+  "hu": "Ne parázz!",
+  "en": "Don't panic!"
+ },
+ {
+  "where": "Szakaszcímek (a főcím helyén váltakoznak)",
+  "kind": "Szöveg",
+  "source": "span.ink",
+  "hu": "Firkáim",
+  "en": "Artworks"
+ },
+ {
+  "where": "Szakaszcímek (a főcím helyén váltakoznak)",
+  "kind": "Szöveg",
+  "source": "span.title-sub",
+  "hu": "Festek, rajzolok, nem csak bőrre.\nVan, ami a falon végzi.",
+  "en": "I paint, I draw, not just on skin.\nSome of it ends up on walls."
+ },
+ {
+  "where": "Szakaszcímek (a főcím helyén váltakoznak)",
+  "kind": "Szöveg",
+  "source": "span.ink",
+  "hu": "Mi újság",
+  "en": "What's new"
+ },
+ {
+  "where": "Szakaszcímek (a főcím helyén váltakoznak)",
+  "kind": "Szöveg",
+  "source": "span.title-sub",
+  "hu": "Ezt látnod kell. Kattints!",
+  "en": "You need to see this. Click!"
+ },
+ {
+  "where": "Szakaszcímek (a főcím helyén váltakoznak)",
+  "kind": "Szöveg",
+  "source": "span.ink",
+  "hu": "Mikor jössz?",
+  "en": "Are you ready?"
+ },
+ {
+  "where": "Szakaszcímek (a főcím helyén váltakoznak)",
+  "kind": "Szöveg",
+  "source": "span.ink",
+  "hu": "Keress meg!",
+  "en": "Contact Me!"
+ },
+ {
+  "where": "Szakaszcímek (a főcím helyén váltakoznak)",
+  "kind": "Szöveg",
+  "source": "span.ink",
+  "hu": "Mit szeretnél?",
+  "en": "Get inked!"
+ },
+ {
+  "where": "1. Hero (Hello)",
+  "kind": "Szöveg",
+  "source": "span.line.accent",
+  "hu": "Varrjuk fel!",
+  "en": "Get inked!"
+ },
+ {
+  "where": "1. Hero (Hello)",
+  "kind": "Szöveg",
+  "source": "h1.hero-subtitle",
+  "hu": "Egyedi tetkók\nTira Le Chat-től.",
+  "en": "Custom tattoos\nby Tira Le Chat."
+ },
+ {
+  "where": "1. Hero (Hello)",
+  "kind": "Szöveg",
+  "source": "p.hero-hurts",
+  "hu": "Fájni fog.",
+  "en": "Gonna hurt."
+ },
+ {
+  "where": "1. Hero (Hello)",
+  "kind": "Kép leírása (alt)",
+  "source": "img tira-7-b.webp",
+  "hu": "Tira, a tetováló művész",
+  "en": "Tira, the tattoo artist"
+ },
+ {
+  "where": "1. Hero (Hello)",
+  "kind": "Szöveg",
+  "source": "p.tag.tag--here",
+  "hu": "Ő itt\nTira.",
+  "en": "It's me,\nTira."
+ },
+ {
+  "where": "2. Munkáim",
+  "kind": "Címke képernyőolvasónak (aria-label)",
+  "source": "section.works",
+  "hu": "Munkáim",
+  "en": "My work"
+ },
+ {
+  "where": "2. Munkáim",
+  "kind": "Szöveg (képernyőolvasónak / keresőnek)",
+  "source": "h2.sr-only",
+  "hu": "Munkáim – elkészült tetoválások",
+  "en": "My work – finished tattoos"
+ },
+ {
+  "where": "2. Munkáim",
+  "kind": "Kép leírása (alt)",
+  "source": "img tattoo-1.webp",
+  "hu": "Csuklyás, koponyaarcú alak vörös glóriával — Tira Le Chat tetoválása",
+  "en": "Hooded figure with a skull-like face and red halo — tattoo by Tira Le Chat"
+ },
+ {
+  "where": "2. Munkáim",
+  "kind": "Kép leírása (alt)",
+  "source": "img tattoo-2.webp",
+  "hu": "Farkas rózsával, színes részletekkel — Tira Le Chat tetoválása",
+  "en": "Wolf with a rose and colorful details — tattoo by Tira Le Chat"
+ },
+ {
+  "where": "2. Munkáim",
+  "kind": "Kép leírása (alt)",
+  "source": "img tattoo-3.webp",
+  "hu": "Fekete-szürke realisztikus arcok — Tira Le Chat tetoválása",
+  "en": "Realistic black-and-grey faces — tattoo by Tira Le Chat"
+ },
+ {
+  "where": "2. Munkáim",
+  "kind": "Kép leírása (alt)",
+  "source": "img tattoo-4.webp",
+  "hu": "Színes gomba és béka, pszichedelikus tájban — Tira Le Chat tetoválása",
+  "en": "Colorful mushroom and frog in a psychedelic landscape — tattoo by Tira Le Chat"
+ },
+ {
+  "where": "2. Munkáim",
+  "kind": "Kép leírása (alt)",
+  "source": "img tattoo-5.webp",
+  "hu": "Színes főnixmadár tájképpel — Tira Le Chat tetoválása",
+  "en": "Colorful phoenix with a landscape — tattoo by Tira Le Chat"
+ },
+ {
+  "where": "2. Munkáim",
+  "kind": "Kép leírása (alt)",
+  "source": "img tattoo-6.webp",
+  "hu": "Realisztikus koponya geometrikus mintával, fekete-szürke — Tira Le Chat tetoválása",
+  "en": "Realistic skull with geometric pattern, black and grey — tattoo by Tira Le Chat"
+ },
+ {
+  "where": "2. Munkáim",
+  "kind": "Kép leírása (alt)",
+  "source": "img tattoo-7.webp",
+  "hu": "Pipacsok finom vonalas virágmintával — Tira Le Chat tetoválása",
+  "en": "Poppies with delicate fine-line floral details — tattoo by Tira Le Chat"
+ },
+ {
+  "where": "2. Munkáim",
+  "kind": "Kép leírása (alt)",
+  "source": "img tattoo-8.webp",
+  "hu": "Színes bohóc cirkuszi sátorral — Tira Le Chat tetoválása",
+  "en": "Colorful clown with a circus tent — tattoo by Tira Le Chat"
+ },
+ {
+  "where": "2. Munkáim",
+  "kind": "Kép leírása (alt)",
+  "source": "img tattoo-9.webp",
+  "hu": "Gótikus katedrális női arccal, fekete-szürke — Tira Le Chat tetoválása",
+  "en": "Gothic cathedral with a woman's face, black and grey — tattoo by Tira Le Chat"
+ },
+ {
+  "where": "2. Munkáim",
+  "kind": "Kép leírása (alt)",
+  "source": "img tattoo-10.webp",
+  "hu": "Színes női portré virágokkal és levelekkel — Tira Le Chat tetoválása",
+  "en": "Colorful woman's portrait with flowers and leaves — tattoo by Tira Le Chat"
+ },
+ {
+  "where": "2. Munkáim",
+  "kind": "Kép leírása (alt)",
+  "source": "img tattoo-11.webp",
+  "hu": "Fekete-szürke realisztikus kompozíció arcokkal és kígyóval — Tira Le Chat tetoválása",
+  "en": "Realistic black-and-grey composition with faces and a snake — tattoo by Tira Le Chat"
+ },
+ {
+  "where": "2. Munkáim",
+  "kind": "Kép leírása (alt)",
+  "source": "img tattoo-12.webp",
+  "hu": "Fekete-szürke női arc polipkarokkal — Tira Le Chat tetoválása",
+  "en": "Black-and-grey woman's face with octopus tentacles — tattoo by Tira Le Chat"
+ },
+ {
+  "where": "2. Munkáim",
+  "kind": "Kép leírása (alt)",
+  "source": "img tattoo-13.webp",
+  "hu": "Sólyom gombákkal és almával — Tira Le Chat tetoválása",
+  "en": "Hawk with mushrooms and an apple — tattoo by Tira Le Chat"
+ },
+ {
+  "where": "2. Munkáim",
+  "kind": "Kép leírása (alt)",
+  "source": "img tattoo-14.webp",
+  "hu": "Színes méhek lépes mézzel és virágokkal — Tira Le Chat tetoválása",
+  "en": "Colorful bees with honeycomb, honey and flowers — tattoo by Tira Le Chat"
+ },
+ {
+  "where": "2. Munkáim",
+  "kind": "Kép leírása (alt)",
+  "source": "img tattoo-15.webp",
+  "hu": "Narancssárga főnixmadár — Tira Le Chat tetoválása",
+  "en": "Orange phoenix — tattoo by Tira Le Chat"
+ },
+ {
+  "where": "2. Munkáim",
+  "kind": "Szöveg",
+  "source": "p.works-note-text",
+  "hu": "Ez már\nnem jön le.",
+  "en": "They are\nPermanent"
+ },
+ {
+  "where": "3. Foglalható / Ne parázz",
+  "kind": "Címke képernyőolvasónak (aria-label)",
+  "source": "section.designs",
+  "hu": "Foglalható",
+  "en": "WannaDo"
+ },
+ {
+  "where": "3. Foglalható / Ne parázz",
+  "kind": "Szöveg (képernyőolvasónak / keresőnek)",
+  "source": "h2.sr-only",
+  "hu": "Foglalható tetoválásminták",
+  "en": "Available tattoo designs"
+ },
+ {
+  "where": "3. Foglalható / Ne parázz",
+  "kind": "Szöveg",
+  "source": "span.cat-bubble-text",
+  "hu": "Én csak nézem,\nahogy szenvedsz.",
+  "en": "I'm just watching\nyou suffer."
+ },
+ {
+  "where": "3. Foglalható / Ne parázz",
+  "kind": "Szöveg",
+  "source": "p.designs-caption",
+  "hu": "Nem fog fájni.\nNa jó, egy kicsit.",
+  "en": "Not gonna hurt.\nOkay, maybe a little."
+ },
+ {
+  "where": "3. Foglalható / Ne parázz",
+  "kind": "Kép leírása (alt)",
+  "source": "img tervezes-1.webp",
+  "hu": "Szarvaskoponyás női portré pipacsokkal — foglalható tetoválásterv, Tira Le Chat",
+  "en": "Woman's portrait with deer skull and poppies — available tattoo design, Tira Le Chat"
+ },
+ {
+  "where": "3. Foglalható / Ne parázz",
+  "kind": "Kép leírása (alt)",
+  "source": "img tervezes-2.webp",
+  "hu": "Rózsaszín gyémántos cumi „90s Baby” felirattal — foglalható tetoválásterv, Tira Le Chat",
+  "en": "Pink diamond pacifier with “90s Baby” lettering — available tattoo design, Tira Le Chat"
+ },
+ {
+  "where": "3. Foglalható / Ne parázz",
+  "kind": "Kép leírása (alt)",
+  "source": "img tervezes-3.webp",
+  "hu": "Arany bonbon rúzsnyommal és „Hot Mess” felirattal — foglalható tetoválásterv, Tira Le Chat",
+  "en": "Golden bonbon with lipstick mark and “Hot Mess” lettering — available tattoo design, Tira Le Chat"
+ },
+ {
+  "where": "3. Foglalható / Ne parázz",
+  "kind": "Kép leírása (alt)",
+  "source": "img tervezes-4.webp",
+  "hu": "Béka orchideákkal és tavirózsával — foglalható tetoválásterv, Tira Le Chat",
+  "en": "Frog with orchids and water lily — available tattoo design, Tira Le Chat"
+ },
+ {
+  "where": "3. Foglalható / Ne parázz",
+  "kind": "Kép leírása (alt)",
+  "source": "img tervezes-5.webp",
+  "hu": "Jégkrém „Yum! Yum!” felirattal — foglalható tetoválásterv, Tira Le Chat",
+  "en": "Ice cream with “Yum! Yum!” lettering — available tattoo design, Tira Le Chat"
+ },
+ {
+  "where": "3. Foglalható / Ne parázz",
+  "kind": "Szöveg",
+  "source": "button.decor.design.design--5",
+  "hu": "Kattints, lássuk,\nhogyan nézne ki!",
+  "en": "Click and see\nhow it'd look!"
+ },
+ {
+  "where": "3. Foglalható / Ne parázz",
+  "kind": "Kép leírása (alt)",
+  "source": "img tervezes-6.webp",
+  "hu": "Narancssárga madár koponyán, lótusztokokkal — foglalható tetoválásterv, Tira Le Chat",
+  "en": "Orange bird on a skull with lotus pods — available tattoo design, Tira Le Chat"
+ },
+ {
+  "where": "3. Foglalható / Ne parázz",
+  "kind": "Kép leírása (alt)",
+  "source": "img tervezes-7.webp",
+  "hu": "Rajzszöggel kiszúrt smiley lufi „kinda sus.” buborékkal — foglalható tetoválásterv, Tira Le Chat",
+  "en": "Smiley balloon pinned with a tack and “kinda sus.” bubble — available tattoo design, Tira Le Chat"
+ },
+ {
+  "where": "3. Foglalható / Ne parázz",
+  "kind": "Kép leírása (alt)",
+  "source": "img tervezes-8.webp",
+  "hu": "Leragasztott banán rajzfilmfigurával és „Art” felirattal — foglalható tetoválásterv, Tira Le Chat",
+  "en": "Taped-up banana with cartoon character and “Art” lettering — available tattoo design, Tira Le Chat"
+ },
+ {
+  "where": "3. Foglalható / Ne parázz",
+  "kind": "Kép leírása (alt)",
+  "source": "img tervezes-9.webp",
+  "hu": "Kék tónusú női portré vörös liliomokkal — foglalható tetoválásterv, Tira Le Chat",
+  "en": "Blue-toned woman's portrait with red lilies — available tattoo design, Tira Le Chat"
+ },
+ {
+  "where": "4. Festmények (Firkáim)",
+  "kind": "Címke képernyőolvasónak (aria-label)",
+  "source": "section.paintings",
+  "hu": "Festmények",
+  "en": "Paintings"
+ },
+ {
+  "where": "4. Festmények (Firkáim)",
+  "kind": "Szöveg (képernyőolvasónak / keresőnek)",
+  "source": "h2.sr-only",
+  "hu": "Festmények és rajzok",
+  "en": "Paintings and drawings"
+ },
+ {
+  "where": "4. Festmények (Firkáim)",
+  "kind": "Kép leírása (alt)",
+  "source": "img rajz-1.webp",
+  "hu": "Fekete-fehér border collie portréja – színes ceruzarajz, Tira Le Chat",
+  "en": "Black-and-white border collie portrait – colored pencil drawing, Tira Le Chat"
+ },
+ {
+  "where": "4. Festmények (Firkáim)",
+  "kind": "Kép leírása (alt)",
+  "source": "img rajz-2.webp",
+  "hu": "Barna-fehér border collie portréja – színes ceruzarajz, Tira Le Chat",
+  "en": "Brown-and-white border collie portrait – colored pencil drawing, Tira Le Chat"
+ },
+ {
+  "where": "4. Festmények (Firkáim)",
+  "kind": "Kép leírása (alt)",
+  "source": "img rajz-3.webp",
+  "hu": "Férfi mellszobor virágok között – grafitrajz, Tira Le Chat",
+  "en": "Male bust among flowers – graphite drawing, Tira Le Chat"
+ },
+ {
+  "where": "4. Festmények (Firkáim)",
+  "kind": "Kép leírása (alt)",
+  "source": "img rajz-4.webp",
+  "hu": "Fekvő női arc agancsokkal és virágokkal – grafitrajz, Tira Le Chat",
+  "en": "Lying woman's face with antlers and flowers – graphite drawing, Tira Le Chat"
+ },
+ {
+  "where": "4. Festmények (Firkáim)",
+  "kind": "Kép leírása (alt)",
+  "source": "img rajz-5.webp",
+  "hu": "Maszkos alakok és kinyúló kezek – grafitrajz, Tira Le Chat",
+  "en": "Masked figures and reaching hands – graphite drawing, Tira Le Chat"
+ },
+ {
+  "where": "4. Festmények (Firkáim)",
+  "kind": "Kép leírása (alt)",
+  "source": "img rajz-6.webp",
+  "hu": "Állatkoponya indákkal és levelekkel – grafitrajz, Tira Le Chat",
+  "en": "Animal skull with vines and leaves – graphite drawing, Tira Le Chat"
+ },
+ {
+  "where": "4. Festmények (Firkáim)",
+  "kind": "Kép leírása (alt)",
+  "source": "img rajz-7.webp",
+  "hu": "Női akt lótuszok között – grafitrajz, Tira Le Chat",
+  "en": "Female nude among lotus flowers – graphite drawing, Tira Le Chat"
+ },
+ {
+  "where": "4. Festmények (Firkáim)",
+  "kind": "Kép leírása (alt)",
+  "source": "img rajz-8.webp",
+  "hu": "Húsevő növények – grafitrajz, Tira Le Chat",
+  "en": "Carnivorous plants – graphite drawing, Tira Le Chat"
+ },
+ {
+  "where": "4. Festmények (Firkáim)",
+  "kind": "Kép leírása (alt)",
+  "source": "img rajz-9.webp",
+  "hu": "Lepelbe burkolt nőalak gepárdokkal – grafitrajz, Tira Le Chat",
+  "en": "Veiled woman with cheetahs – graphite drawing, Tira Le Chat"
+ },
+ {
+  "where": "4. Festmények (Firkáim)",
+  "kind": "Kép leírása (alt)",
+  "source": "img rajz-10.webp",
+  "hu": "Kakas kalászok és virágok között – grafitrajz, Tira Le Chat",
+  "en": "Rooster among wheat and flowers – graphite drawing, Tira Le Chat"
+ },
+ {
+  "where": "4. Festmények (Firkáim)",
+  "kind": "Kép leírása (alt)",
+  "source": "img festmeny-1.webp",
+  "hu": "Absztrakt női arc – festmény, Tira Le Chat",
+  "en": "Abstract woman's face – painting, Tira Le Chat"
+ },
+ {
+  "where": "4. Festmények (Firkáim)",
+  "kind": "Kép leírása (alt)",
+  "source": "img festmeny-2.webp",
+  "hu": "Erdei tó csónakkal és japán kapuval – festmény, Tira Le Chat",
+  "en": "Forest lake with a boat and Japanese gate – painting, Tira Le Chat"
+ },
+ {
+  "where": "4. Festmények (Firkáim)",
+  "kind": "Kép leírása (alt)",
+  "source": "img festmeny-3.webp",
+  "hu": "Esős, neonfényes utca esernyős alakokkal – festmény, Tira Le Chat",
+  "en": "Rainy neon-lit street with figures under umbrellas – painting, Tira Le Chat"
+ },
+ {
+  "where": "4. Festmények (Firkáim)",
+  "kind": "Kép leírása (alt)",
+  "source": "img festmeny-4.webp",
+  "hu": "Esős nagyvárosi utca neonreklámokkal – festmény, Tira Le Chat",
+  "en": "Rainy city street with neon signs – painting, Tira Le Chat"
+ },
+ {
+  "where": "4. Festmények (Firkáim)",
+  "kind": "Kép leírása (alt)",
+  "source": "img festmeny-5.webp",
+  "hu": "Színes női portré lehunyt szemmel – festmény, Tira Le Chat",
+  "en": "Colorful woman's portrait with closed eyes – painting, Tira Le Chat"
+ },
+ {
+  "where": "4. Festmények (Firkáim)",
+  "kind": "Kép leírása (alt)",
+  "source": "img festmeny-6.webp",
+  "hu": "Virágos erdei tisztás – festmény, Tira Le Chat",
+  "en": "Forest clearing with flowers – painting, Tira Le Chat"
+ },
+ {
+  "where": "4. Festmények (Firkáim)",
+  "kind": "Kép leírása (alt)",
+  "source": "img festmeny-7.webp",
+  "hu": "Lótusztokok és levelek – festmény, Tira Le Chat",
+  "en": "Lotus pods and leaves – painting, Tira Le Chat"
+ },
+ {
+  "where": "4. Festmények (Firkáim)",
+  "kind": "Kép leírása (alt)",
+  "source": "img festmeny-8.webp",
+  "hu": "Arc koi pontyokkal körülvéve – festmény, Tira Le Chat",
+  "en": "Face surrounded by koi fish – painting, Tira Le Chat"
+ },
+ {
+  "where": "4. Festmények (Firkáim)",
+  "kind": "Kép leírása (alt)",
+  "source": "img festmeny-9.webp",
+  "hu": "Naplementés rét magányos fával – festmény, Tira Le Chat",
+  "en": "Sunset meadow with a lone tree – painting, Tira Le Chat"
+ },
+ {
+  "where": "4. Festmények (Firkáim)",
+  "kind": "Kép leírása (alt)",
+  "source": "img festmeny-10.webp",
+  "hu": "Két arc, az egyik fejjel lefelé – festmény, Tira Le Chat",
+  "en": "Two faces, one upside down – painting, Tira Le Chat"
+ },
+ {
+  "where": "4. Festmények (Firkáim)",
+  "kind": "Szöveg",
+  "source": "li",
+  "hu": "Gazdis",
+  "en": "Sold"
+ },
+ {
+  "where": "4. Festmények (Firkáim)",
+  "kind": "Szöveg",
+  "source": "li",
+  "hu": "Gazdit keres",
+  "en": "For Sale"
+ },
+ {
+  "where": "4. Festmények (Firkáim)",
+  "kind": "Szöveg",
+  "source": "p.paintings-note-cta",
+  "hu": "Vigyél egyet!",
+  "en": "Take one home!"
+ },
+ {
+  "where": "5. Mi újság?",
+  "kind": "Címke képernyőolvasónak (aria-label)",
+  "source": "section.news",
+  "hu": "Mi újság?",
+  "en": "What's new?"
+ },
+ {
+  "where": "5. Mi újság?",
+  "kind": "Szöveg (képernyőolvasónak / keresőnek)",
+  "source": "h2.sr-only",
+  "hu": "Mi újság?",
+  "en": "What's new?"
+ },
+ {
+  "where": "5. Mi újság?",
+  "kind": "Kép leírása (alt)",
+  "source": "img tira-4.webp",
+  "hu": "Tira Le Chat tetoválóművész",
+  "en": "Tira Le Chat tattoo artist"
+ },
+ {
+  "where": "5. Mi újság?",
+  "kind": "Kép leírása (alt)",
+  "source": "img news-1.webp",
+  "hu": "falfestés",
+  "en": "wall decor"
+ },
+ {
+  "where": "5. Mi újság?",
+  "kind": "Szöveg",
+  "source": "button.news-item.news-item--1",
+  "hu": "falfestés",
+  "en": "wall decor"
+ },
+ {
+  "where": "5. Mi újság?",
+  "kind": "Kép leírása (alt)",
+  "source": "img news-2.webp",
+  "hu": "workshop",
+  "en": "workshop"
+ },
+ {
+  "where": "5. Mi újság?",
+  "kind": "Szöveg",
+  "source": "button.news-item.news-item--2",
+  "hu": "workshop",
+  "en": "workshop"
+ },
+ {
+  "where": "5. Mi újság?",
+  "kind": "Kép leírása (alt)",
+  "source": "img news-3.webp",
+  "hu": "életképek",
+  "en": "slice of life"
+ },
+ {
+  "where": "5. Mi újság?",
+  "kind": "Szöveg",
+  "source": "button.news-item.news-item--3",
+  "hu": "életképek",
+  "en": "slice of life"
+ },
+ {
+  "where": "5. Mi újság?",
+  "kind": "Kép leírása (alt)",
+  "source": "img news-4.webp",
+  "hu": "kiállítás",
+  "en": "exhibition"
+ },
+ {
+  "where": "5. Mi újság?",
+  "kind": "Szöveg",
+  "source": "button.news-item.news-item--4",
+  "hu": "kiállítás",
+  "en": "exhibition"
+ },
+ {
+  "where": "5. Mi újság?",
+  "kind": "Kép leírása (alt)",
+  "source": "img news-5.webp",
+  "hu": "ki vagyok?!",
+  "en": "who am I?!"
+ },
+ {
+  "where": "5. Mi újság?",
+  "kind": "Szöveg",
+  "source": "button.news-item.news-item--5",
+  "hu": "ki vagyok?!",
+  "en": "who am I?!"
+ },
+ {
+  "where": "6. Kapcsolat",
+  "kind": "Címke képernyőolvasónak (aria-label)",
+  "source": "section.contact",
+  "hu": "Kapcsolat",
+  "en": "Contact"
+ },
+ {
+  "where": "6. Kapcsolat",
+  "kind": "Szöveg",
+  "source": "span.contact-picto-note",
+  "hu": "Na?!",
+  "en": "Sup?!"
+ },
+ {
+  "where": "6. Kapcsolat",
+  "kind": "Szöveg",
+  "source": "span.end-bubble-text",
+  "hu": "Nincs tovább!\nDobj egy üzit!",
+  "en": "That's it!\nDM me!"
+ },
+ {
+  "where": "6. Kapcsolat",
+  "kind": "Szöveg (képernyőolvasónak / keresőnek)",
+  "source": "h2.contact-heading",
+  "hu": "Mikor jössz?",
+  "en": "When are you coming?"
+ },
+ {
+  "where": "6. Kapcsolat",
+  "kind": "Szöveg",
+  "source": "p.contact-where",
+  "hu": "Itt varrok: Budapest\nÍrd meg mire gondolsz,\na többit kitaláljuk.",
+  "en": "I tattoo here: Budapest\nTell me your ideas,\nwe'll figure out the rest."
+ },
+ {
+  "where": "6. Kapcsolat",
+  "kind": "Szöveg",
+  "source": "span.contact-hint-text",
+  "hu": "katt a másoláshoz",
+  "en": "click to copy"
+ },
+ {
+  "where": "6. Kapcsolat",
+  "kind": "Szöveg",
+  "source": "button.contact-mail",
+  "hu": "krisztina.macsai@gmail.com",
+  "en": "krisztina.macsai@gmail.com"
+ },
+ {
+  "where": "6. Kapcsolat",
+  "kind": "Címke képernyőolvasónak (aria-label)",
+  "source": "a.social-btn",
+  "hu": "Instagram",
+  "en": "Instagram"
+ },
+ {
+  "where": "6. Kapcsolat",
+  "kind": "Címke képernyőolvasónak (aria-label)",
+  "source": "a.social-btn",
+  "hu": "Facebook",
+  "en": "Facebook"
+ },
+ {
+  "where": "6. Kapcsolat",
+  "kind": "Címke képernyőolvasónak (aria-label)",
+  "source": "a.social-btn",
+  "hu": "E-mail",
+  "en": "E-mail"
+ },
+ {
+  "where": "6. Kapcsolat",
+  "kind": "Szöveg",
+  "source": "a",
+  "hu": "danielkiss.hu",
+  "en": "danielkiss.hu"
+ },
+ {
+  "where": "6. Kapcsolat",
+  "kind": "Szöveg",
+  "source": "p.contact-copyright",
+  "hu": "© 2026 Tira le Chat.\nMinden jog fenntartva meg minden...\nAz oldalt ő csinálta:",
+  "en": "© 2026 Tira le Chat.\nAll rights reserved and all that...\nSite by:"
+ },
+ {
+  "where": "Alcímek mobilon (bal alsó papír)",
+  "kind": "Szöveg",
+  "source": "p.act-sub.act-sub--1",
+  "hu": "Egyedi tetkók\nTira Le Chat-től.",
+  "en": "Custom ink\nby Tira Le Chat."
+ },
+ {
+  "where": "Alcímek mobilon (bal alsó papír)",
+  "kind": "Szöveg",
+  "source": "p.act-sub.act-sub--2",
+  "hu": "10+ év gyakorlás.\nErre futotta.",
+  "en": "10+ years of practice.\nThis is what I've got."
+ },
+ {
+  "where": "Alcímek mobilon (bal alsó papír)",
+  "kind": "Szöveg",
+  "source": "p.act-sub.act-sub--3",
+  "hu": "Ez akár rád is kerülhet,\nha bevállalod.",
+  "en": "This could be\nyour next tattoo."
+ },
+ {
+  "where": "Alcímek mobilon (bal alsó papír)",
+  "kind": "Szöveg",
+  "source": "p.act-sub.act-sub--3b",
+  "hu": "Nem fog fájni.\nNa jó, egy kicsit.",
+  "en": "Not gonna hurt.\nOkay, maybe a little."
+ },
+ {
+  "where": "Alcímek mobilon (bal alsó papír)",
+  "kind": "Szöveg",
+  "source": "p.act-sub.act-sub--4",
+  "hu": "Festek, rajzolok,\nnem csak bőrre.",
+  "en": "I paint, I draw,\nnot just on skin."
+ },
+ {
+  "where": "Alcímek mobilon (bal alsó papír)",
+  "kind": "Szöveg",
+  "source": "p.act-sub.act-sub--5",
+  "hu": "Ezt látnod kell.\nKattints!",
+  "en": "You need to see this.\nClick!"
+ },
+ {
+  "where": "5. Mi újság? – galéria 1",
+  "kind": "Galéria címe",
+  "source": "news-gallery.js GALLERIES[1].title",
+  "hu": "falfestés",
+  "en": "wallpaint"
+ },
+ {
+  "where": "5. Mi újság? – galéria 1",
+  "kind": "Galéria szövege",
+  "source": "news-gallery.js GALLERIES[1].text",
+  "hu": "Egy szép májusi napon felhívott egy barátom, hogy megszállta az ihlet és dekoráljuk ki a fodrász üzlete egyik falát.\nAz ötlet már akkor tetszett, az alap koncepciót gyorsan összeállitottuk.\nVégül nyár végén álltunk neki a projektnek, mindenki nyaralt meg hőgutát sem akartunk kapni 🤗\nPersze voltak kisebb kezdeti nehézségek, először a vakolat esett ki foltokban, aztán a stencilezéshez a nyomtatással volt egy kisebb zökkenő, de végül a tervezetthez képest csak minimális csúszással startoltunk.\nGrafit poral vittük fel a minta alapját, mert a helyiség túl kicsi ahhoz,hogy projektort tudtunk volna használni. Kicsit koszolósabb volt igy,de a célnak tökéletesen megfelelt ez a megoldás is.\nAztán jöttek a kontúrok, majd a háttér és végül az unikornis.\nMindennel együtt 6 nap alatt készült el, ebből 3 teljes nap.\nMeg kell valljam, kicsit izgultam. Ugyan a technikai részletekben nem volt újdonság, de nem szoktam faldekorációkat csinálni, főleg ekkora méretben (2m x 2,8m).\nJó móka volt, de a vállam a végére majd leszakadt 🤗",
+  "en": "One lovely day in May, a friend called me saying inspiration had struck and asked if we could decorate one of the walls in her hair salon.\nI loved the idea right away, so we quickly put together the basic concept.\nWe finally started the project at the end of summer — everyone was on holiday, and none of us wanted heatstroke 🤗\nOf course, there were a few little hiccups at the start. First, the plaster started falling off in patches, then we hit a small snag with printing the stencils, but in the end we got going with only a minimal delay.\nWe transferred the base of the design using graphite powder because the room was too small for a projector. It was a bit messier this way, but it worked perfectly for the job.\nThen came the outlines, followed by the background, and finally the unicorn.\nAll in all, it took six days, three of them full workdays.\nI have to admit, I was a little nervous. There was nothing technically new for me, but I don't usually paint wall decorations — especially not at this size (2 m × 2.8 m).\nIt was great fun, but by the end my shoulder was absolutely wrecked 🤗"
+ },
+ {
+  "where": "5. Mi újság? – galéria 2",
+  "kind": "Galéria címe",
+  "source": "news-gallery.js GALLERIES[2].title",
+  "hu": "workshop",
+  "en": "workshop"
+ },
+ {
+  "where": "5. Mi újság? – galéria 2",
+  "kind": "Galéria szövege",
+  "source": "news-gallery.js GALLERIES[2].text",
+  "hu": "Évek óta szó volt róla, hogy tartsunk magunknak a szalonban egy festegetős workshopot.\nAztán idén végre összehoztunk egy kezdő alkalmat.\nMivél én vagyok a csapatban, aki aktivan fest, rajzol, engem ért a megtiszteletés, hogy osszam az észt. 🤗\nTehát összeszedtem a kaotikus gondolataim és első körben egy eszköz ismereti prezentációt tartottam, emelett igyekeztem az álltalam használt technikákat, és tapasztalataimat befogadható formában átadni a kollégáimnak.\nSzó volt a grafit és szines ceruza használatról, akvarell és olaj festésről.\nBemutattam, hogyan lesz egy kusza firkából a vázlatfüzetben, kidolgozott kép. Elmondtam milyen fontos, hogy sokat vázlatoljunk / firkáljunk.\nNagyon jól esett, hogy ilyen nyitottan fogadták az okosságaim, és remélem sikerült megadni az induló löketet 🤗",
+  "en": "For years, we'd been talking about doing a little painting workshop for ourselves at the studio.\nThis year, we finally made it happen with a beginner session.\nSince I'm the one on the team who actively paints and draws, I got the honor of pretending I know everything. 🤗\nSo I gathered my chaotic thoughts and started with a little presentation on art materials, while also trying to share the techniques and experience I've picked up in a way my colleagues could actually take in.\nWe talked about graphite and colored pencils, watercolor and oil painting.\nI showed how a messy scribble in a sketchbook can turn into a finished piece. And I talked about how important it is to sketch and doodle a lot.\nIt felt really good to have my little nuggets of wisdom welcomed so openly, and I hope I managed to give everyone a bit of a push to get started 🤗"
+ },
+ {
+  "where": "5. Mi újság? – galéria 3",
+  "kind": "Galéria címe",
+  "source": "news-gallery.js GALLERIES[3].title",
+  "hu": "életképek",
+  "en": "slice of life"
+ },
+ {
+  "where": "5. Mi újság? – galéria 3",
+  "kind": "Galéria szövege (a kép)",
+  "source": "news-gallery.js GALLERIES[3].texts.a",
+  "hu": "Ez itt az én szipi-szupi munkaállomásom. A mini galériám tartalma pedig időről-időre frissül, igy mindig van mit “megcsodálni”",
+  "en": "This is my super-duper little workstation. And the contents of my mini gallery get refreshed from time to time, so there's always something new to “admire.”"
+ },
+ {
+  "where": "5. Mi újság? – galéria 3",
+  "kind": "Galéria szövege (b kép)",
+  "source": "news-gallery.js GALLERIES[3].texts.b",
+  "hu": "Vannak vendégeim akikkel a sok év alatt barátságok szövődtek. Hálás vagyok értük és a lankadatlan támogatásukért.",
+  "en": "Some of my clients have turned into friends over the years. I'm incredibly grateful for them and their never-ending support."
+ },
+ {
+  "where": "5. Mi újság? – galéria 3",
+  "kind": "Galéria szövege (c kép)",
+  "source": "news-gallery.js GALLERIES[3].texts.c",
+  "hu": "…és van amikor megpihenünk 🤗 A tetoválók “betegsége”, hogy folyton fáj a vállunk / hátunk…,mert garnélarák pózban dolgozunk 🤗",
+  "en": "…and sometimes we just take a break 🤗 A tattooer's occupational hazard is a permanently sore shoulder / back… because we work in shrimp mode 🤗"
+ },
+ {
+  "where": "5. Mi újság? – galéria 3",
+  "kind": "Galéria szövege (d kép)",
+  "source": "news-gallery.js GALLERIES[3].texts.d",
+  "hu": "Van hogy ilyen csodás képeket kapok a vendégeimtől, avagy: “munkáim természetes közegükben”",
+  "en": "Sometimes I get amazing photos like this from my clients. Or, as I like to call it: “my work in its natural habitat.”"
+ },
+ {
+  "where": "5. Mi újság? – galéria 4",
+  "kind": "Galéria címe",
+  "source": "news-gallery.js GALLERIES[4].title",
+  "hu": "kiállítás",
+  "en": "exhibition"
+ },
+ {
+  "where": "5. Mi újság? – galéria 4",
+  "kind": "Galéria szövege",
+  "source": "news-gallery.js GALLERIES[4].text",
+  "hu": "A “Hungarian Flames” kiállitás a folytatása egy tavalyi kezdeményezésnek.\nA lényeg, hogy megmutassuk a világnak, a tetoválók nem csak tetoválnak, és sokan közülünk a tradicionális múvészet több területén tevékenykedünk.\nIdén én is bekerültem a meghivott alkotók közé.\nA tavalyi kiállitástól eltérően most nem hagyományos kép-formátumban, hanem testrész-formákra kellett festeni.\nA téma a “tűz” volt, a technika pedig teljesen szabadon választott.\nÉn olajjal festettem, de utolag, főleg látva mások munkáit, izgalmasabb let volna egy vegyes-technika.\nA kiállitás a Viadukt Bár-ban volt megtekinthető 2026 augusztus 19. és szeptember 2. között.",
+  "en": "The “Hungarian Flames” exhibition was a continuation of an initiative that started last year.\nThe idea is to show the world that tattooers don't just tattoo — many of us also work across different areas of traditional art.\nThis year, I was invited to join the featured artists too.\nUnlike last year's exhibition, we weren't painting on traditional canvases this time, but on body-part-shaped forms.\nThe theme was “fire,” while the choice of technique was completely up to us.\nI painted mine in oils, but looking back — especially after seeing everyone else's work — a mixed-media approach would have been more exciting.\nThe exhibition was held at Viadukt Bár from August 19 to September 2, 2026."
+ },
+ {
+  "where": "5. Mi újság? – galéria 5",
+  "kind": "Galéria címe",
+  "source": "news-gallery.js GALLERIES[5].title",
+  "hu": "ki vagyok?!",
+  "en": "who am I?!"
+ },
+ {
+  "where": "5. Mi újság? – galéria 5",
+  "kind": "Galéria szövege",
+  "source": "news-gallery.js GALLERIES[5].text",
+  "hu": "…csak egy lány, azt hiszem 🤗\nEgyszerű dolgok tesznek boldoggá, mint nézni ahogy nőnek a tölgyfáim, amiket makk-ról nevelek, vagy leszüretelni a veteményes kertem.\nA bolond kutyáim, akik fitten tartanak, kirándulni velük… meg pl sütit sütni, állitólag kifejezetten finom pogácsát tudod csinálni 🤗\nTetováló azért lettem, mert beleszerettem a tetoválásokba, és mikor elkészült az első tetkóm,homlokon csapott a felismerés, hogy akár csinálhatnám is ezt.\nAkkor még javában művészeti sulis voltam.\nSzóval először lett egy festőművész meg egy képgrafikus végzettségem… aztán egy logisztikai asszisztensi… ne kérdezd.\nÉs persze az élet hozott mindenféle fordulatot ,szóval csak 27 évesen kezdtem hivatásszerűen tetoválni.\nMondták is nekem sokat, hogy túl öreg vagyok hozzá.\nAztán mégis kitartottam, pedig a 14 év alatt sokszor ellenem vagy a tetkózás ellen szóltak a dolgok.\nVoltak hibák, kudarcok, nagyon nehéz pillanatok, amikor mindent megkérdőjeleztem… Leginkább az életben hozott döntéseim 🤗\nMég mindig hiszek benne, hogy a tetoválás is tud klasszikus értelemben vett művészet lenni, és még mindig az a legfontosabb számomra, hogy olyan mintákat készitsek, amelyek személyesek, valóban kapcsolódnak viselőjükhöz.\nDe nem kell itt rögtön a drámára gondolni, ettől még lehet az a minta vicces, szokatlan, meghökkentő 🤗\nÉs itt jön az, amiért a leginkább hálás vagyok a tetoválásnak. Mindaz, amit az emberekről és egyúttal magamról tanultam.\nA társadalom minden rétegéből jönnek hozzánk vendégek, különböző sorsok, tapasztalatok… És mesélnek.\nMinél több történetet ismertem meg, annál inkább láttam, valójában mindannyian ugyan azt szeretnénk.\nLehet van, aki nagyobb házat, mint mások, de a stabilitásra, szeretetre, békére való vágyakozás azonos.\nEz most baromi giccses, igaz?\nA lényeg, hogy számomra mindegy honna jöttél, ha jó arc vagy, biztosan szuperül elleszünk 🤗",
+  "en": "…just a girl, I guess 🤗\nSimple things make me happy, like watching the oak trees I grew from acorns get bigger, or harvesting whatever I've grown in the garden.\nMy crazy dogs keep me fit, taking them on hikes… and baking cookies, too. Apparently I make a pretty damn good pogácsa 🤗\nI became a tattooer because I fell in love with tattoos, and when I got my first one, it hit me: hey, I could actually do this.\nBack then, I was still in art school.\nSo first I got qualifications in fine art and graphic design… then one in logistics assistance… don't ask.\nAnd of course, life threw a few curveballs my way, so I didn't start tattooing professionally until I was 27.\nPeople used to tell me I was too old for it.\nI stuck with it anyway, even though over those 14 years there were plenty of times when things seemed to be working against me - or against tattooing itself.\nThere were mistakes, failures, really hard moments when I questioned everything… mostly the decisions I'd made in life 🤗\nI still believe tattoos can be art in the classic way, and it's still most important to me to create pieces that are personal and genuinely connected to the person wearing them.\nBut hey, don't immediately expect some deep dramatic story. A tattoo can be funny, weird, unexpected or downright shocking too 🤗\nAnd that's where the thing I'm most grateful to tattooing for comes in: everything I've learned about people, and about myself along the way.\nAll kind of people became our clients, with different stories and experiences… and they telling their stories.\nThe more I heard, the more I realized that, underneath it all, we're not so different at all.\nSure, some people want a bigger house than others, but the need for stability, love and peace is universal.\nSounds cheesy, isn't it?\nAnyway, doesn't matter where you come from, If you're cool, we willget along! 🤗"
+ },
+ {
+  "where": "5. Mi újság? – galéria",
+  "kind": "Címke képernyőolvasónak (aria-label)",
+  "source": "news-gallery.js",
+  "hu": "Előző kép",
+  "en": "Previous image"
+ },
+ {
+  "where": "5. Mi újság? – galéria",
+  "kind": "Címke képernyőolvasónak (aria-label)",
+  "source": "news-gallery.js",
+  "hu": "Következő kép",
+  "en": "Next image"
+ },
+ {
+  "where": "5. Mi újság? – galéria",
+  "kind": "Címke képernyőolvasónak (aria-label)",
+  "source": "news-gallery.js",
+  "hu": "Bezárás",
+  "en": "Close"
+ },
+ {
+  "where": "Képnézegető (lightbox)",
+  "kind": "Címke képernyőolvasónak (aria-label)",
+  "source": "lightbox.js",
+  "hu": "Képnézegető",
+  "en": "Image viewer"
+ },
+ {
+  "where": "Képnézegető (lightbox)",
+  "kind": "Címke képernyőolvasónak (aria-label)",
+  "source": "lightbox.js",
+  "hu": "Előző",
+  "en": "Previous"
+ },
+ {
+  "where": "Képnézegető (lightbox)",
+  "kind": "Címke képernyőolvasónak (aria-label)",
+  "source": "lightbox.js",
+  "hu": "Következő",
+  "en": "Next"
+ },
+ {
+  "where": "Képnézegető (lightbox)",
+  "kind": "Címke képernyőolvasónak (aria-label)",
+  "source": "lightbox.js",
+  "hu": "Bezárás",
+  "en": "Close"
+ },
+ {
+  "where": "6. Kapcsolat + mobil menü",
+  "kind": "Szöveg (kattintás után az e-mail helyén)",
+  "source": "contact.js",
+  "hu": "másolva",
+  "en": "copied"
+ }
+]

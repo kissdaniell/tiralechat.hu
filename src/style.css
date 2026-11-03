@@ -1,0 +1,4113 @@
+@import './fonts.css';
+
+:root {
+  --pink: #fb0a8f;
+  --ink: #131313;
+  --paper: #e9e7e3;
+
+  --font-display: 'Anton', sans-serif;
+  --font-body: 'Montserrat', sans-serif;
+  --font-hand: 'Delicious Handrawn', cursive;
+  --font-brush: 'Protest Revolution', cursive;
+  --font-mono: 'Courier Prime', monospace;
+
+  /* ===== Responsive basis =====
+     The layout was designed on a 2.185:1 window (1536 × 703). --gap is how
+     much narrower than that the window is, in vh: 0 at that shape and wider,
+     negative when narrower. Layout values that give way on narrower screens
+     add a share of it, so the scene changes smoothly with the window's
+     shape, is exactly as designed at the reference — and at any one shape
+     looks the same whatever the resolution (everything is in vh / vw / %).
+     Pictures that belong to the edges and the bottom (stickers, Kriszti, the
+     back) are sized in vh, so they keep filling the height. */
+  --gap: min(0px, 100vw - 218.5vh);
+  /* The content unit (text, the galleries, the headline block): 1% of a
+     16:9 frame at the reference shape and wider; on narrower windows it
+     shrinks with --gap, leaving room for the pictures at the edges. The
+     compact view (below 1.55:1) sets its own. */
+  --u: calc(1.7768vh + 0.008 * var(--gap));
+  /* Where the headline block stands (the hero, and the contact act, whose
+     title comes back to the same spot). On narrower windows it moves down
+     a little, towards the middle of the height. */
+  --intro-left: calc(59vh + 0.44 * var(--gap));
+  --intro-top: calc(12.2 * var(--u) - 0.2 * var(--gap));
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+
+/* Only on html: a body background would paint over the fixed .backdrop. */
+html {
+  /* Light only: browsers' automatic dark modes would recolour the artwork. */
+  color-scheme: only light;
+  background: var(--paper);
+  /* No rubber-band or pull-to-refresh tug on the pinned scene. */
+  overscroll-behavior: none;
+}
+
+/* The page's one background, fixed behind everything. 100vw x 100vh like the
+   hero, so it frames the image exactly as the hero did. */
+.backdrop {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  background: url('/img/main-bg-1.webp') center center / cover no-repeat;
+}
+
+/* Two layers: the sky (main-bg-1), drawn moving by src/sky.js on this canvas
+   (the CSS background above shows until then, or instead of it), and the
+   wall over it (main-bg-2, transparent where the sky shows through). */
+.backdrop-sky,
+.backdrop-wall {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.backdrop-wall {
+  background: url('/img/main-bg-2.webp') center center / cover no-repeat;
+}
+
+/* Where the sky isn't animated (phones, tablets: html.no-sky): the two
+   layers merged into one picture — one request instead of two, so the wall
+   can't arrive after the sky. The size by the screen: the picture covers its
+   height (941 px tall at full size). */
+.no-sky .backdrop {
+  background-image: url('/img/r/1280/main-bg-mob.webp');
+}
+
+.no-sky .backdrop-sky,
+.no-sky .backdrop-wall {
+  display: none;
+}
+
+@media (min-resolution: 2dppx) and (min-height: 500px), (min-height: 800px) {
+  .no-sky .backdrop {
+    background-image: url('/img/main-bg-mob.webp');
+  }
+}
+
+@media (max-resolution: 1.4dppx) and (max-height: 560px) and (max-width: 1000px) {
+  .no-sky .backdrop {
+    background-image: url('/img/r/960/main-bg-mob.webp');
+  }
+}
+
+/* The width / height attributes in the markup only tell a picture's shape,
+   so its box is the right size before it has loaded (tools/images/srcset.mjs
+   writes them); the size itself always comes from this stylesheet. */
+img {
+  max-width: 100%;
+  display: block;
+  width: auto;
+  height: auto;
+}
+
+a {
+  color: inherit;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+/* In the page for screen readers and search engines, not on screen. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.section-stub {
+  min-height: 40vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  color: var(--ink);
+  border-top: 2px solid var(--ink);
+}
+
+/* ---------- Scrolling on touch devices (src/smooth-scroll.js) ---------- */
+
+/* The document itself never scrolls, so the browser's bars never slide:
+   #smooth-wrapper is a full-screen box that scrolls inside itself, the stage
+   sticks to its top, and the spacer src/stage.js puts after it is the length
+   of the scene. */
+.touch-scroll,
+.touch-scroll body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+/* One pixel short of the screen on purpose: Chrome promotes a scroller
+   that fills the viewport exactly to "root scroller", and then hides its
+   address bar on its scrolling just as it does for the document. */
+.touch-scroll #smooth-wrapper {
+  position: fixed;
+  inset: 0 0 1px;
+  overflow: hidden auto;
+  overscroll-behavior: none;
+  scrollbar-width: none;
+}
+
+.touch-scroll #smooth-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.touch-scroll .stage {
+  position: sticky;
+  top: 0;
+}
+
+/* ---------- Stage ---------- */
+
+/* The full-screen frame the scroll scene plays in (see src/stage.js). 100vw
+   like the hero, so the folder's % box keeps the same basis. */
+.stage {
+  position: relative;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* ---------- Hero ---------- */
+/*
+ * .hero is a real 100vw x 100vh box; children are positioned with % of it.
+ * Left stickers and portrait are sized in vw (as is the fixed header above
+ * it). The two text clusters (.hero-intro on the left, .hero-side on the
+ * right) are sized in --u and position their parts relative to themselves,
+ * so each cluster holds together at any window shape.
+ */
+/* No z-index here on purpose: the hero's own z-index values must interleave
+   with the folder layers, which belong to the stage. */
+.hero {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Starting state (see src/preloader.js, src/hero-intro.js): only the
+   background and the preloader show; the header and the hero wait hidden
+   until they glide in (inline styles take over from this rule). */
+.intro-pending [data-enter],
+.intro-pending .site-header > *,
+.intro-pending .portrait-stack,
+.intro-pending .title-lead,
+.intro-pending .hero .hero-title .accent,
+.intro-pending .hero-subtitle,
+.intro-pending .hero-tape {
+  visibility: hidden;
+}
+
+/* The later acts' pieces wait hidden until the scroll scene has been built
+   (src/stage.js) and has put them where they start. */
+.scene-pending .stage > :not(.hero) {
+  visibility: hidden;
+}
+
+/* Until the hero stands they aren't even laid out: what isn't laid out
+   doesn't fetch its (lazy) pictures or its background, so the line is the
+   first screen's alone. src/stage.js lets go of this just before it builds
+   the scene; from then on src/late-images.js loads their pictures in turn.
+   (Of the portrait view's subtitles the hero's own stays in: its paper
+   belongs to the first screen.) */
+.scene-waiting .stage > section:not(.hero),
+.scene-waiting .folder-hand,
+.scene-waiting .act-sub + .act-sub {
+  display: none;
+}
+
+/* The same for the first screen's own latecomers, which only take their
+   turn once the hero stands: her other poses, and the corner's other pictos. */
+.intro-pending .portrait-stack img + img,
+.intro-pending .decor-smiley > img + img {
+  display: none;
+}
+
+/* ---------- Preloader ---------- */
+
+/* Over everything, the logo big and a little above the middle, the slogan
+   under it. --pl-logo: the logo's width (the rest is sized from it). */
+.preloader {
+  display: none;
+}
+
+.preloading .preloader {
+  --pl-logo: min(68vw, 82vh);
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--pl-logo) * 0.02);
+  padding-bottom: 14vh;
+  pointer-events: none;
+}
+
+.pl-logo {
+  width: var(--pl-logo);
+  height: auto;
+  animation: pl-in 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes pl-in {
+  from {
+    opacity: 0;
+    scale: 0.85;
+  }
+}
+
+.pl-slogan {
+  position: relative;
+}
+
+.preloader .pl-slogan .line.accent {
+  margin: 0;
+  font-size: calc(var(--pl-logo) * 0.155);
+}
+
+/* The slogan is there from the start as a grey, thinner ghost (so a slow
+   load doesn't look like half a word); the needle writes the pink over it. */
+.pl-ghost {
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: rgb(19 19 19 / 0.28);
+  /* Thinner: a stroke in the wall's grey eats into the letters' edges. */
+  paint-order: fill stroke;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.pl-ink {
+  position: relative;
+}
+
+/* Revealed from the left as the needle goes (src/preloader.js). */
+.pl-ink {
+  display: inline-block;
+  clip-path: inset(-40% 100% -40% -10%);
+}
+
+.preloader .accent-underline {
+  clip-path: inset(-10% 100% -10% 0);
+}
+
+.pl-tip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Its needle tip (4% / 98.7% of the picture) is what src/preloader.js
+   steers; it turns round it. */
+.pl-machine {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(var(--pl-logo) * 0.36);
+  max-width: none;
+  transform-origin: 4% 98.7%;
+  visibility: hidden;
+  filter: drop-shadow(0.4vh 0.8vh 1vh rgb(0 0 0 / 0.35));
+}
+
+/* ---------- Header ---------- */
+
+/* Fixed over the whole page (outside the ScrollSmoother wrapper). 100vw like
+   the hero, so it lines up with the hero's own vw/% layout exactly. The bar
+   spans the full width, so only its links take clicks; the gaps between them
+   pass through to whatever scrolls underneath. */
+.site-header {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  z-index: 50;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.8vw;
+  padding: 1.3vw 2.5vw 0;
+  pointer-events: none;
+}
+
+.site-header a {
+  pointer-events: auto;
+}
+
+.logo {
+  display: block;
+  flex: 0 0 auto;
+  margin: -0.9vw 0 0 -1.4vw;
+}
+
+.logo img {
+  width: 21vw;
+  height: auto;
+}
+
+/* Left-aligned over the headline: starts where "Ne csak" does (the headline
+   block's 25% plus the line's 0.25em indent of an 8.4u title). */
+.nav {
+  position: absolute;
+  left: calc(25vw + 2.1 * var(--u));
+  top: 1.3vw;
+  display: flex;
+  align-items: center;
+  gap: 1.9vw;
+  padding-top: 1.3vw;
+}
+
+.nav a {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.85vw;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+/* The label is what trembles (src/nav-life.js), so the link's own box —
+   what the pointer is over — never moves. Its pink underline draws on from
+   the left on hover (or now and then by itself), and a black arrow sometimes
+   points at it from below-right. */
+.nav-item {
+  position: relative;
+  display: inline-block;
+}
+
+.nav-underline,
+.nav-arrow {
+  position: absolute;
+  max-width: none;
+  pointer-events: none;
+}
+
+.nav-underline {
+  left: -10%;
+  top: 64%;
+  width: 120%;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.3s ease-in;
+  rotate: 5deg;
+}
+
+.nav a:hover .nav-underline,
+.nav a:focus-visible .nav-underline,
+.nav-item.is-underlined .nav-underline {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 0.4s cubic-bezier(0.3, 0.9, 0.3, 1);
+}
+
+/* arrow.webp points down-left (its head at 9% / 80% of the image): above
+   and a little right of the label, turned a touch, it points down at it. */
+.nav-arrow {
+  left: 42%;
+  top: -1.55vw;
+  width: 2vw;
+  opacity: 0;
+  transform: rotate(-88deg) scale(0.4);
+  transform-origin: 9% 80%;
+  transition: opacity 0.2s, transform 0.3s ease-in;
+}
+
+.nav-item.is-pointed .nav-arrow {
+  opacity: 1;
+  transform: rotate(-122deg);
+  transition: opacity 0.15s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* A torn paper (socials-bg) with the three painted icons on it. The small
+   right/bottom padding centres the icons on the paper body, clear of the
+   tape in its lower right corner. */
+.socials {
+  flex: 0 0 auto;
+  width: 17vw;
+  aspect-ratio: 2 / 1;
+  margin: -0.9vw -1.4vw 0 0;
+  padding: 0 1vw 1.1vw 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35vw;
+  background: url('/img/socials-bg.webp') center / 100% 100% no-repeat;
+}
+
+.social-btn {
+  display: block;
+  height: 3.4vw;
+  transition: scale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), rotate 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.social-btn img {
+  width: auto;
+  height: 100%;
+  max-width: none;
+}
+
+.social-btn:hover,
+.social-btn:focus-visible {
+  scale: 1.12;
+  rotate: -5deg;
+}
+
+/* ---------- Decorative stickers & elements ---------- */
+
+/* --sat / --con / --bri default to 1 (no change); only the tattoo-design
+   stickers set them, to sit a step behind Kriszti. */
+.decor {
+  position: absolute;
+  filter:
+    saturate(var(--sat, 1)) contrast(var(--con, 1)) brightness(var(--bri, 1))
+    drop-shadow(0.3vw 0.48vw 0.6vw rgb(0 0 0 / 0.3));
+}
+
+/* The five tattoo stickers are span > img (see index.html). On hover — and
+   now and then by themselves (.is-nudged, src/hero-life.js) — the picture
+   inside tips and grows a touch, each by its own --hover-turn /
+   --hover-scale, with a small overshoot, and eases back afterwards. */
+.decor-tattoo > img {
+  width: 100%;
+  height: auto;
+  transition:
+    scale 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+    rotate 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.decor-tattoo:hover > img,
+.decor-tattoo.is-nudged > img {
+  scale: var(--hover-scale, 1.05);
+  rotate: var(--hover-turn, 6deg);
+  transition-duration: 0.35s;
+  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Hit areas. The picture that tips and grows never takes the pointer: if
+   it did, near its edge the turn would pull it out from under the cursor,
+   the hover would drop, it would turn back, catch the cursor again… and
+   judder. Instead a still layer over each piece (::before, which doesn't
+   turn) takes it, clipped to the piece's outline (traced from the PNG's
+   alpha, a little outside the art), so one piece's transparent corners
+   don't steal the hover from the piece beneath. */
+.decor-tattoo,
+.work,
+.design,
+.painting,
+.news-item {
+  pointer-events: none;
+}
+
+.decor-tattoo > img,
+.work > img,
+.design > img,
+.painting-face,
+.news-face {
+  pointer-events: none;
+}
+
+.decor-tattoo::before,
+.work::before,
+.design::before,
+.painting::before,
+.news-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+.decor-bird::before {
+  clip-path: polygon(13.3% 51.6%, 25.3% 48.7%, 26.5% 45.8%, 26.5% 42.4%, 25.1% 37.4%, 16.9% 24.9%, 19.1% 15.4%, 25.6% 6.1%, 36.7% 0%, 50.5% 0%, 63.2% 3.3%, 64.7% 25.6%, 66.3% 33.3%, 67.9% 37.8%, 73.7% 38.6%, 78.3% 40.9%, 81.8% 44%, 83.4% 47.7%, 88.3% 51.6%, 90.6% 56.3%, 89.9% 61.2%, 86.8% 65.6%, 79.4% 67.8%, 75.5% 71.5%, 75.8% 80.9%, 72.9% 92.8%, 62.9% 98.6%, 50.5% 99.7%, 37.9% 99%, 27.2% 94.1%, 26.2% 79.7%, 28.6% 69%, 32.7% 61.6%, 26.7% 60.8%, 15.4% 60.1%, 13.7% 55.9%);
+}
+
+.decor-plague::before {
+  clip-path: polygon(17.7% 47.6%, 14.7% 43.6%, 12.4% 39%, 12% 33.8%, 13.9% 28.5%, 15.2% 21.4%, 18.7% 13.2%, 26% 5.2%, 37.6% 0%, 51.5% 0%, 65.5% 0%, 78.4% 3%, 84.2% 13.3%, 88.5% 20.9%, 89.8% 28.1%, 88.1% 34.8%, 86.9% 39.8%, 82.3% 44.3%, 82.1% 47.6%, 81.9% 50.8%, 83.6% 54.6%, 81.9% 58.2%, 80.5% 62.3%, 80.5% 68.4%, 83.1% 80.6%, 81% 96.5%, 66.8% 99.8%, 51.5% 100%, 36.3% 99.6%, 24.1% 93%, 21.2% 79.3%, 21.8% 68.9%, 22.3% 62.4%, 21.8% 57.9%, 23% 53.8%, 20.5% 50.9%);
+}
+
+.decor-strawberry::before {
+  clip-path: polygon(19.5% 55.2%, 23.1% 50.7%, 21.7% 45.4%, 21.6% 39.5%, 23.3% 33.8%, 27.2% 29.2%, 31% 23.8%, 35.3% 16.5%, 42.4% 13.8%, 50.1% 13.1%, 57.4% 15.9%, 72.4% 0%, 82.7% 1.7%, 91.9% 7.9%, 88.9% 24.3%, 89.4% 33.6%, 91.7% 40.8%, 86.8% 49.1%, 85.5% 55.2%, 72.6% 59%, 70.4% 62.2%, 74.1% 68.3%, 74.4% 74.5%, 73.2% 81.2%, 73.4% 93.5%, 66.1% 96.7%, 58.1% 98.2%, 50.1% 97.9%, 42.1% 98.7%, 33.5% 98.6%, 25.8% 95.2%, 18.9% 90.6%, 11.8% 85.7%, 6.8% 78.9%, 4.6% 70.9%, 4.3% 62.9%);
+}
+
+.decor-slide::before {
+  clip-path: polygon(7.2% 51.9%, 7% 48.8%, 4.8% 45.1%, 7% 41.7%, 2.3% 35.5%, 3.4% 29.1%, 3.9% 19.1%, 17.1% 14.7%, 27.7% 0%, 50.3% 0%, 71.4% 3.2%, 87% 10.8%, 95.5% 20%, 93.7% 30.8%, 96.9% 36%, 97.8% 40.7%, 98.1% 44.8%, 98.6% 48.4%, 96.7% 51.9%, 95.3% 55.1%, 94.9% 58.5%, 98.6% 63.2%, 100% 69.3%, 100% 77.1%, 94.3% 82.9%, 84% 89.6%, 69.5% 96.2%, 50.3% 100%, 29.3% 100%, 11.2% 95.6%, 4.2% 84.4%, 1% 75.8%, 0% 69.3%, 1.4% 63.4%, 7.7% 58.2%, 7.8% 54.9%);
+}
+
+.decor-portrait2::before {
+  clip-path: polygon(7.6% 46.7%, 1.5% 41%, 0% 34%, 0% 27.1%, 4.3% 21.2%, 11.9% 16.3%, 21.1% 12.8%, 30.4% 9.4%, 39.6% 3.7%, 51.4% 0%, 64.6% 0%, 77.8% 0%, 90% 3.4%, 99% 10%, 100% 18.6%, 100% 26.8%, 92% 37.1%, 93.9% 41.8%, 95.4% 46.7%, 95.7% 51.8%, 93.7% 56.7%, 90.2% 61.2%, 87.7% 66.4%, 88.5% 75.3%, 85.7% 85.3%, 79.1% 96.1%, 65.8% 99.7%, 51.4% 100%, 37.9% 96.3%, 26.1% 91.5%, 17.2% 84.9%, 9.6% 78.9%, 6.3% 71.2%, 4.6% 64.2%, 6.2% 57.3%, 9.5% 51.5%);
+}
+
+/* Torn paper behind the logo, inside the header, sized in vw like the logo so
+   they stay locked together. Turned ~180deg so its tape strip sits at the top
+   edge (mostly off-screen) instead of behind the black lettering. z-index -1
+   puts it under the logo within the header's own stacking. */
+.decor-paper {
+  width: 32vw;
+  left: -5vw;
+  top: -9vw;
+  z-index: -1;
+  rotate: 176deg;
+}
+
+.decor-bird {
+  width: 48vh;
+    left: calc(-1.3vh + 0.3 * var(--gap));
+    top: 1%;
+    z-index: 5;
+    rotate: -46deg;
+  --sat: 0.6;
+  --con: 0.88;
+  --bri: 1.03;
+  --hover-turn: -7deg;
+  --hover-scale: 1.05;
+}
+
+.decor-plague {
+  width: 52.4vh;
+  left: calc(-18.7vh + 0.1 * var(--gap));
+  top: 26%;
+  z-index: 5;
+  rotate: -6deg;
+  --sat: 0.78;
+  --con: 0.92;
+  --hover-turn: 6deg;
+  --hover-scale: 1.04;
+}
+
+/* Anchored to the bottom, so it always reaches it. */
+.decor-strawberry {
+  width: 48vh;
+    left: calc(0.1vh + 0.14 * var(--gap));
+    bottom: -5.7vh;
+    z-index: 7;
+  --sat: 0.5;
+  --con: 0.92;
+  --bri: 1.04;
+  --hover-turn: -9deg;
+  --hover-scale: 1.06;
+}
+
+.decor-cat {
+  width: 12vh;
+  left: calc(44.8vh + 0.3 * var(--gap));
+  top: 85%;
+  z-index: 8;
+  transform: rotate(-6deg);
+  opacity: 0.85;
+}
+
+.decor-smiley {
+  width: 8.7vh;
+  right: calc(48.4vh + 0.25 * var(--gap));
+  top: 4%;
+  z-index: 9;
+  transform: rotate(9deg);
+  opacity: 0.9;
+}
+
+/* It holds the other corner pictos on top of the smiley (they only show in
+   portrait, src/corner-picto.js), each fitted into its box. */
+.decor-smiley > img {
+  width: 100%;
+  height: auto;
+}
+
+.decor-smiley > img + img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  visibility: hidden;
+  /* Laid out in the portrait view only: they are lazy, so the other views
+     never download them. */
+  display: none;
+}
+
+@media (max-aspect-ratio: 85/100) {
+  .decor-smiley > img + img {
+    display: block;
+  }
+}
+
+/* ---------- Headline block ---------- */
+
+.hero-intro {
+  position: absolute;
+  left: var(--intro-left);
+  top: var(--intro-top);
+  z-index: 20;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: calc(8.4 * var(--u));
+  /* (It was the h1 once, and keeps a heading's weight.) */
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+/* Each line is slanted on its own rather than the whole block, so the left
+   edges stay stacked on one vertical like in the reference. */
+.hero-title .line {
+  position: relative;
+  display: block;
+  width: max-content;
+  transform: rotate(-5deg);
+  transform-origin: left center;
+}
+
+.hero-title .ink {
+  display: inline-block;
+  filter: url(#grunge);
+}
+
+.title-lead {
+  position: relative;
+  display: block;
+}
+
+/* "Munkáim", laid midway between "Ne csak" and "viseld." — the scroll scene
+   dissolves those two lines into it. Hidden until then (and without JS). */
+.hero-title .title-next {
+  position: absolute;
+  top: 0.5em;
+  left: 0;
+  opacity: 0;
+}
+
+/* "15+ év gyakorlás. / Erre futotta." under "Munkáim", in the hero
+   subtitle's type. Placed from the title block's corner in --u (the title is
+   8.4u; "Munkáim" sits 0.5em down and starts 0.25em in), hidden until the
+   scroll scene brings it in. */
+.hero-title .title-sub {
+  position: absolute;
+  left: calc(2.1 * var(--u));
+  top: calc(13.4 * var(--u));
+  font-family: var(--font-mono);
+  font-size: calc(1.57 * var(--u));
+  line-height: 1.18;
+  letter-spacing: 0.05rem;
+  text-transform: none;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* "Ne csak / viseld." sit slightly right of "Vállald." */
+.hero-title .line:not(.accent) {
+  margin-left: 0.25em;
+}
+
+/* In em of the first line so it tracks the text: sits just above the gap
+   between "NE" and "CSAK" (Anton's cap top is 0.055em into its line box). */
+.hero-crown {
+  position: absolute;
+  z-index: 1;
+  left: 0.82em;
+  top: -0.51em;
+  width: 0.62em;
+  transform: rotate(-5deg);
+}
+
+/* "Varrjuk fel!" is half again as long as the old "Vállald.", so it's set
+   smaller to end before Kriszti instead of running behind her. */
+.hero-title .accent {
+  font-family: var(--font-brush);
+  font-size: 0.72em;
+  font-weight: 400;
+  color: var(--pink);
+  margin-top: 0.33em;
+}
+
+/* One brush swipe from under the "Á" to under the last "L": dips below the
+   baseline at its left tip and rises to meet the letters on the right. */
+.accent-underline {
+  position: absolute;
+  left: 21%;
+  top: 0.61em;
+  width: 55%;
+  height: auto;
+  rotate: 8deg;
+}
+
+.hero-subtitle {
+    margin: calc(5.5 * var(--u)) 0 0 calc(2.1 * var(--u));
+    font-family: var(--font-mono);
+    font-size: calc(1.95 * var(--u));
+    line-height: 1.18;
+    color: var(--ink);
+    letter-spacing: 0.05rem;
+    font-weight: 600;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(2.3 * var(--u));
+  margin: calc(2.74 * var(--u)) 0 0 calc(2.1 * var(--u));
+  padding: calc(1.15 * var(--u)) calc(2 * var(--u)) calc(1.15 * var(--u)) calc(1.8 * var(--u));
+  background: var(--ink);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: calc(1.05 * var(--u));
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.btn-arrow {
+  width: calc(2.5 * var(--u));
+  height: auto;
+}
+
+.btn:hover {
+  background: var(--pink);
+}
+
+/* Tape + "Fájni fog." live inside .hero-intro and are placed in --u from its
+   corner, so they keep the reference's relation to the button. */
+.hero-tape {
+      position: absolute;
+    left: calc(26.7 * var(--u));
+    top: calc(22.9 * var(--u));
+    width: calc(24.6 * var(--u));
+    z-index: -1;
+}
+
+.hero-hurts {
+          position: absolute;
+    left: calc(24.2 * var(--u));
+    top: calc(39 * var(--u));
+    font-family: var(--font-hand);
+    font-size: calc(3.3 * var(--u));
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--ink);
+    transform: rotate(-8deg);
+    transform-origin: left center;
+}
+
+/* ---------- Tattoo machine ---------- */
+
+/* Part of the .hero-intro cluster (next to the tape's pink ✕), so it moves
+   with the headline; the cluster's z-index keeps it in front of the portrait.
+   Mirrored so the grip points down-right like the reference — the shadow's
+   x offset is negated because filters are applied before the transform. */
+.hero-machine {
+      position: absolute;
+    left: calc(33.3 * var(--u));
+    top: calc(22.7 * var(--u));
+    width: calc(17.5 * var(--u));
+    transform: rotate(-33deg) scaleX(-1);
+    filter: drop-shadow(calc(-0.42 * var(--u)) calc(0.6 * var(--u)) calc(0.72 * var(--u)) rgb(0 0 0 / 0.35));
+}
+
+/* ---------- Portrait ---------- */
+
+/* Right-anchored in vh. .portrait-notes is a box laid exactly over her,
+   carrying "Ő itt Tira." and its arrow in % of her picture, so they always
+   point at her neck. */
+.portrait-stack,
+.portrait-notes {
+  position: absolute;
+    right: calc(26.2vh + 0.29 * var(--gap));
+    bottom: -10%;
+    width: 72.1vh;
+    aspect-ratio: 3 / 4;
+}
+
+.portrait-stack {
+    z-index: 22;
+  filter: saturate(1.06) contrast(1.04) drop-shadow(0 calc(0.6 * var(--u)) calc(1.4 * var(--u)) rgb(0 0 0 / 0.35));
+}
+
+/* Not interactive; and while a pose is being stuck on (lifted and bigger) it
+   reaches over the stickers around it, whose hover it must not steal. */
+.portrait-stack {
+  pointer-events: none;
+}
+
+/* Above her; its own sizes are in cqw = 1% of her picture's width. */
+.portrait-notes {
+  z-index: 25;
+  container-type: inline-size;
+  pointer-events: none;
+}
+
+.portrait-stack img {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: auto;
+}
+
+/* ---------- Folder (scroll scene, see src/hero-scroll.js) ---------- */
+/*
+ * Two layers of one folder on the same 1536x888 canvas, children of the
+ * stage: the back (with the papers) sits behind every hero element and the
+ * works, the front cover in front of all of them (the fixed header still
+ * stays on top), so whatever slides between the two goes into or comes out
+ * of the folder. Parked just below the frame until the scroll scene lifts it.
+ */
+.folder {
+  position: absolute;
+  left: 10%;
+  top: 100%;
+  width: 80%;
+  pointer-events: none;
+}
+
+.folder--back {
+  z-index: 1;
+}
+
+.folder--front {
+  z-index: 40;
+}
+
+/* ---------- Right column ---------- */
+/*
+ * Everything right of the portrait, kept as one cluster hugging the right
+ * edge and sized in --u, so the stickers keep the reference's vertical
+ * stacking and don't overflow at wide window ratios. Children are placed in
+ * --u from the column's top-left corner. No z-index here on purpose: the
+ * children's own z-index values must interleave with the portrait's (15).
+ */
+.hero-side {
+  /* Its pictures and notes keep their reference size to the height. */
+  --u: 1.7768vh;
+  position: absolute;
+  top: 0;
+  right: calc(0.2 * var(--gap));
+  width: calc(20 * var(--u));
+  height: 100%;
+}
+
+.decor-slide {
+  left: calc(2.8 * var(--u));
+    top: calc(16.9 * var(--u));
+    width: calc(18.8 * var(--u));
+    z-index: 8;
+    transform: rotate(15deg);
+  --sat: 0.62;
+  --con: 0.9;
+  --hover-turn: 8deg;
+  --hover-scale: 1.05;
+}
+
+/* Pushed partly off the right edge (like the reference) to leave a patch of
+   sky between it and the portrait for "Ő itt Tira." */
+.decor-portrait2 {
+  left: calc(4 * var(--u));
+    top: calc(3 * var(--u));
+    width: calc(22.5 * var(--u));
+    z-index: 9;
+  --sat: 0.8;
+  --con: 0.9;
+  --hover-turn: -5deg;
+  --hover-scale: 1.04;
+}
+
+/* Taped over the top-left corner of the SLIDE sticker. */
+.decor-bandaid {
+  left: calc(11 * var(--u));
+    top: calc(39 * var(--u));
+    width: calc(6 * var(--u));
+    z-index: 11;
+    transform: rotate(15deg);
+}
+
+.tag {
+  position: absolute;
+  z-index: 25;
+  font-family: var(--font-hand);
+  color: var(--ink);
+  white-space: nowrap;
+  transform-origin: left center;
+}
+
+/* In % of Kriszti's picture (it lives in .portrait-notes): right of her
+   neck, which is free sky in every pose. */
+.tag--here {
+  left: 80%;
+    top: 29%;
+    font-size: 7.6cqw;
+    line-height: 1.1;
+    transform: rotate(-8deg);
+    text-shadow: 0 0 0.12em rgb(255 255 255 / 0.95), 0 0 0.45em rgb(255 255 255 / 0.75);
+}
+
+.tag-caps {
+  text-transform: uppercase;
+}
+
+/* The tip at her neck. */
+.tag-arrow {
+      position: absolute;
+    left: 74%;
+    top: 38.5%;
+    width: 13cqw;
+    z-index: 25;
+    transform: rotate(20deg);
+}
+
+/* The arrow's SVG (see index.html). overflow: visible so the tremble never
+   clips it at the edges. The mask strokes are in the image's own pixels;
+   butt caps, because round ones would leave a dot when "undrawn". */
+.tag-arrow svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(2px 3px 1px rgb(255 255 255 / 0.95));
+}
+
+.arrow-stroke {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 170;
+  stroke-linecap: butt;
+  stroke-linejoin: round;
+}
+
+.arrow-splash {
+  fill: #fff;
+}
+
+/* ---------- Works (see src/works.js) ---------- */
+
+/* Without the scroll scene (reduced motion, no JS) the works are a plain
+   gallery below the hero, headed by the note. */
+.works {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: calc(6 * var(--u)) 2.5vw;
+}
+
+/* The two pictos only belong to the scene. */
+.works-picto {
+  display: none;
+}
+
+/* "Ez már nem jön le." on torn paper. --note-width sizes the whole note: the
+   text is placed in % of the paper and sized from its width, the underline
+   is in em inside the second line, so all three scale together. */
+.works-note {
+  --note-width: calc(31 * var(--u));
+  order: -1;
+  position: relative;
+  width: var(--note-width);
+  aspect-ratio: 1550 / 1015;
+  margin-bottom: calc(3 * var(--u));
+}
+
+/* The same torn paper as behind the logo, mirrored so its tape lands at the
+   bottom-right; shadow x negated for the mirror. */
+.works-note-paper {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  transform: rotate(-4deg) scaleX(-1);
+  filter: drop-shadow(calc(-0.3 * var(--u)) calc(0.48 * var(--u)) calc(0.6 * var(--u)) rgb(0 0 0 / 0.3));
+}
+
+.works-note-text {
+  position: absolute;
+  left: 31%;
+  top: 28%;
+  font-family: var(--font-hand);
+  font-size: calc(var(--note-width) * 0.115);
+  line-height: 0.9;
+  white-space: nowrap;
+  color: var(--ink);
+  transform: rotate(-9deg);
+  transform-origin: left center;
+}
+
+.works-note-line {
+  position: relative;
+  display: inline-block;
+}
+
+/* The brush stroke rises ~10° by itself; turned back a little so it runs
+   along the slanted line instead of climbing away from it. */
+.works-note-underline {
+  position: absolute;
+  left: -4%;
+  top: 0.62em;
+  width: 108%;
+  max-width: none;
+  rotate: 6deg;
+}
+
+.works-strip {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: calc(2 * var(--u));
+}
+
+/* One polaroid PNG: a 2:3 canvas with the card on it (already turned a
+   little). max-width: none, or the global rule would squash it to the
+   zero-width strip below. */
+.work {
+  display: block;
+  width: calc(22 * var(--u));
+  max-width: none;
+  height: auto;
+  aspect-ratio: 2 / 3;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+  filter: drop-shadow(calc(0.3 * var(--u)) calc(0.5 * var(--u)) calc(0.7 * var(--u)) rgb(0 0 0 / 0.3));
+}
+
+/* Like the hero's tattoo stickers: the button is what the stream moves, the
+   picture inside tips and grows on hover (by --hover-turn / --hover-scale,
+   set per card by src/work-cards.js). Only the card itself takes the pointer
+   — a generous outline of the tilted card, leaving out the empty corners and
+   the splatter — so neighbouring boxes don't steal each other's hover. */
+.work > img,
+.design > img,
+.painting-face,
+.news-face {
+  width: 100%;
+  height: auto;
+  transition:
+    scale 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+    rotate 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.work::before {
+  clip-path: polygon(2% 12%, 87% 2%, 100% 87%, 15% 98%);
+}
+
+.work,
+.painting {
+  position: relative;
+}
+
+.work:hover > img,
+.work:focus-visible > img,
+.design:hover > img,
+.design:focus-visible > img,
+.painting:hover > .painting-face,
+.painting:focus-visible > .painting-face,
+.news-item:hover > .news-face,
+.news-item:focus-visible > .news-face {
+  scale: var(--hover-scale, 1.05);
+  rotate: var(--hover-turn, 6deg);
+  transition-duration: 0.35s;
+  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.work:focus-visible,
+.design:focus-visible,
+.painting:focus-visible {
+  outline: none;
+}
+
+/* The zoomed polaroid (src/work-cards.js): a copy flown from the card to the
+   middle of the screen, over a veil, above everything including the header. */
+/* ---------- Lightbox (src/lightbox.js) ---------- */
+
+/* Over everything but the mobile menu: a dark veil, the picture in the
+   middle, the arrows at the edges, the counter under it and the menu's torn
+   corner with the ✕. Sized in --lu (1% of the smaller side, roughly). */
+.lightbox {
+  --lu: min(1vw, 1.2vh);
+  position: fixed;
+  inset: 0;
+  z-index: 75;
+  display: grid;
+  place-items: center;
+  background: rgb(12 12 12 / 0.82);
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+}
+
+.lightbox[hidden] {
+  display: none;
+}
+
+.lb-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* A page: the pictures laid on top of each other in a box src/lightbox.js
+   sizes to the picture. */
+.lb-slide {
+  grid-area: 1 / 1;
+  position: relative;
+  filter: drop-shadow(0 calc(0.8 * var(--lu)) calc(2 * var(--lu)) rgb(0 0 0 / 0.5));
+}
+
+/* Shown when a design's pictures take long to arrive (src/lightbox.js). */
+.lb-spinner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  width: max(44px, calc(6 * var(--lu)));
+  aspect-ratio: 1;
+  margin: calc(max(44px, 6 * var(--lu)) / -2) 0 0 calc(max(44px, 6 * var(--lu)) / -2);
+  border: max(4px, calc(0.6 * var(--lu))) solid rgb(255 255 255 / 0.85);
+  border-top-color: var(--pink);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.25);
+  animation: lb-spin 0.9s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes lb-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+.lb-slide > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  user-select: none;
+}
+
+/* A design's story: the design lies on the photo where its config says
+   (left / top = its middle, height a share of the photo). */
+.lb-slide--story {
+  cursor: pointer;
+}
+
+.lb-slide > .lb-design {
+  inset: auto;
+  width: auto;
+  opacity: 0;
+}
+
+.lb-slide > .lb-done {
+  opacity: 0;
+}
+
+/* The arrows: black tags with the pink frame and the solid pink shadow of
+   the e-mail address, a touch turned. */
+.lb-nav {
+  position: absolute;
+  top: 50%;
+  width: calc(6.4 * var(--lu));
+  min-width: 40px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: calc(0.3 * var(--lu)) solid var(--pink);
+  background: var(--ink);
+  box-shadow: calc(0.6 * var(--lu)) calc(0.6 * var(--lu)) 0 var(--pink);
+  color: #fff;
+  cursor: pointer;
+  translate: 0 -50%;
+  transition: translate 0.15s, box-shadow 0.15s, background-color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.lb-nav svg {
+  width: 58%;
+  height: 58%;
+}
+
+.lb-nav--prev {
+  left: calc(2.4 * var(--lu));
+  rotate: -4deg;
+}
+
+.lb-nav--next {
+  right: calc(3 * var(--lu));
+  rotate: 4deg;
+}
+
+.lb-nav--next svg {
+  scale: -1 1;
+}
+
+.lb-nav:hover,
+.lb-nav:focus-visible {
+  background: var(--pink);
+  box-shadow: calc(0.6 * var(--lu)) calc(0.6 * var(--lu)) 0 var(--ink);
+  outline: none;
+}
+
+.lb-nav:active {
+  translate: calc(0.6 * var(--lu)) calc(-50% + 0.6 * var(--lu));
+  box-shadow: 0 0 0 var(--pink);
+}
+
+.lb-count {
+  position: absolute;
+  left: 50%;
+  bottom: calc(1.6 * var(--lu));
+  translate: -50% 0;
+  padding: 0.1em 0.7em 0.2em;
+  background: var(--ink);
+  font-family: var(--font-hand);
+  font-size: max(16px, calc(2.6 * var(--lu)));
+  line-height: 1.2;
+  color: #fff;
+  rotate: -2deg;
+  pointer-events: none;
+}
+
+/* The torn black corner with the ✕, as in the mobile menu. */
+.lb-corner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: max(110px, calc(22 * var(--lu)));
+  pointer-events: none;
+}
+
+.lb-corner-bg {
+  width: 100%;
+  height: auto;
+}
+
+.lb-close {
+  position: absolute;
+  right: 5%;
+  top: 5%;
+  width: 36%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.lb-close img {
+  width: 100%;
+  height: auto;
+}
+
+/* With the scene the works sit over the hero, between the folder's layers
+   (above its back, under the title and the front cover), in a strip parked
+   just right of the frame (the margin covers the tilted corners and the
+   shadow). src/works.js lays the polaroids out in two loose rows from the
+   strip's top-left corner and slides the strip out of the folder; `top`
+   sets where the rows run. The upper row starts just under the nav; the
+   lower one runs off the bottom edge on purpose (only the polaroids' white
+   bottom border is cut). */
+.has-scene .works {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  padding: 0;
+  pointer-events: none;
+}
+
+.has-scene .works-strip {
+  position: absolute;
+  left: calc(100% + 3 * var(--u));
+  /* 4% from the top — or, on taller windows where that would leave room at
+     the bottom, the rows (about 58u high) centred in the height under the
+     menu (9vh). */
+  top: max(4%, 54.5vh - 31.15 * var(--u));
+  display: block;
+  visibility: hidden;
+}
+
+/* The headline block sits above the works (z 20) and its empty box would
+   swallow the cards' hover and clicks; only its button needs the pointer. */
+.has-scene .hero-intro {
+  pointer-events: none;
+}
+
+.has-scene .hero-intro .btn {
+  pointer-events: auto;
+}
+
+/* --opacity comes from the fade under the "Munkáim" title. */
+.has-scene .work {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: var(--opacity, 1);
+}
+
+/* Parked just right of the frame like the strip; src/works.js slides it out
+   of the folder's lower end and stops it beside the mouth, level with the
+   lower row of polaroids — which stream out from under it. */
+.has-scene .works-note {
+  position: absolute;
+  left: calc(100% + 3 * var(--u));
+  top: 60%;
+  margin: 0;
+}
+
+/* Where the pictos rest on the background; src/works.js glides them in from
+   the left (bandaid) and from below (heart) while the folder turns. The
+   polaroids pass over them. */
+.has-scene .works-picto {
+  display: block;
+}
+
+.works-picto--bandaid {
+  left: 5%;
+  top: 64%;
+  width: calc(13.5 * var(--u));
+}
+
+.works-picto--heart {
+  left: 44%;
+  top: 73%;
+  width: calc(10 * var(--u));
+  rotate: 8deg;
+}
+
+/* ---------- Designs (see src/designs.js) ---------- */
+
+/* Without the scroll scene the designs are a plain gallery after the works;
+   the pictos and the machine only belong to the scene. */
+.designs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: calc(3 * var(--u));
+  padding: calc(6 * var(--u)) 2.5vw;
+}
+
+.designs .decor {
+  position: static;
+}
+
+.designs .design {
+  position: relative;
+}
+
+.designs-picto,
+.designs-machine {
+  display: none;
+}
+
+.design {
+  display: block;
+  width: calc(13 * var(--u));
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+
+/* The back only belongs to the scene. */
+.backpiece {
+  display: none;
+}
+
+/* With the scene they sit over the stage between the folder's layers (like
+   the works), each hidden until it comes out of the turned folder. Places
+   are the top-left corner in % of the frame, size in --u, tilt in `rotate`;
+   the bottom-left corner is kept free for the "Tervezéseim" title and the
+   top-right one for the folder. */
+.has-scene .designs {
+  position: absolute;
+  inset: 0;
+  z-index: 16;
+  display: block;
+  padding: 0;
+  pointer-events: none;
+}
+
+.has-scene .designs .decor {
+  position: absolute;
+}
+
+.has-scene .design,
+.has-scene .designs-machine {
+  display: block;
+  visibility: hidden;
+}
+
+/* Above the back and the machine: the cat's bubble must stay readable. */
+.has-scene .designs-picto {
+  display: block;
+  z-index: 6;
+}
+
+.design--1 { left: 4%;    top: 25%; width: calc(13 * var(--u));   rotate: -4deg; }
+.design--2 { left: 14%;   top: 29%; width: calc(20 * var(--u));   rotate: 5deg; }
+.design--3 { left: 26.5%; top: 12%; width: calc(19.5 * var(--u)); rotate: -3deg; }
+.design--4 { left: 42.5%; top: 15%;  width: calc(18 * var(--u));   rotate: 6deg; }
+.design--5 { left: 55%;   top: 26%; width: calc(12.5 * var(--u)); rotate: -6deg; }
+.design--6 { left: 35.5%; top: 50%; width: calc(19 * var(--u));   rotate: 4deg; }
+.design--7 { left: 50.5%; top: 53%; width: calc(24 * var(--u));   rotate: -5deg; }
+.design--8 { left: 64.5%; top: 69%; width: calc(15.5 * var(--u)); rotate: 3deg; }
+.design--9 { left: 64%;   top: 9%; width: calc(28 * var(--u));   rotate: -4deg; }
+
+/* The tattoo machine lands in the bottom-right corner, partly off the edge. */
+.designs-machine {
+  left: 85%;
+  top: 53%;
+  width: calc(16 * var(--u));
+  rotate: 8deg;
+}
+
+/* The two pictos swapped in while the folder turns: the smiley drops in
+   from the top, the cat rises from below. */
+.designs-picto--smiley {
+  left: 33%;
+  top: 56%;
+  width: calc(7 * var(--u));
+  rotate: -8deg;
+}
+
+.designs-picto--cat {
+  left: 85%;
+  top: 45%;
+  width: calc(8 * var(--u));
+  rotate: 6deg;
+}
+
+/* Each design takes the pointer only inside its own outline (traced from
+   the PNG's alpha, like the hero's stickers), so overlapping designs don't
+   steal each other's hover. Recompute if a design image is replaced. */
+.design--1::before {
+  clip-path: polygon(20.9% 53%, 9.8% 48.3%, 5.7% 42.4%, 3.6% 35.5%, 3.7% 27.7%, 1.5% 15.5%, 10.5% 7.9%, 24.3% 4%, 39% 1.9%, 54.1% 2%, 70.3% 0%, 86.1% 0.2%, 98.5% 6.9%, 100% 13.5%, 100% 28.9%, 86% 41.9%, 90% 45.1%, 92.2% 48.9%, 92.8% 53%, 92.2% 57%, 100% 63.7%, 100% 69.4%, 100% 79.7%, 100% 86.7%, 90.9% 91.1%, 79.2% 94.3%, 67.2% 97.4%, 54.1% 100%, 39.7% 100%, 25.8% 99.5%, 13.1% 95.4%, 5.5% 87.6%, 17.8% 71.2%, 15.5% 66.3%, 15% 61.5%, 15.9% 57%);
+}
+
+.design--2::before {
+  clip-path: polygon(6.2% 52.1%, 0% 43.2%, 0% 33%, 1.9% 24%, 6.9% 15.4%, 13.4% 7.9%, 21.5% 2%, 30.5% 0%, 40.8% 0%, 50.1% 2.3%, 57.7% 8.5%, 62.2% 18.6%, 65.4% 25.4%, 74% 23.3%, 88.1% 19.8%, 94.6% 26.1%, 98.4% 34.3%, 100% 43.1%, 99.2% 52.1%, 99.9% 61%, 100% 72.4%, 100% 83.5%, 97.6% 92.4%, 89.9% 100%, 77.8% 100%, 63.8% 90.3%, 57% 92%, 50.1% 93.8%, 42.1% 97.8%, 33.2% 98.9%, 24.9% 96.2%, 17.7% 91.1%, 11.6% 84.8%, 7.6% 76.9%, 8.1% 67.6%, 13% 58.7%);
+}
+
+.design--3::before {
+  clip-path: polygon(8.7% 52.5%, 9.3% 46.4%, 10.9% 40.5%, 12.9% 34.4%, 17.2% 29.1%, 22.1% 24%, 28.3% 20%, 35.5% 17.2%, 41.9% 9.8%, 51.1% 2.3%, 62.6% 0%, 73.8% 1%, 84.3% 5%, 93.6% 10.7%, 98.1% 20%, 99.5% 29.5%, 85.2% 42.2%, 86.6% 47.3%, 87.2% 52.5%, 86.4% 57.6%, 100% 67.9%, 100% 78.2%, 100% 86.6%, 92.4% 93.1%, 75% 86.7%, 66.5% 87.5%, 59.4% 91.3%, 51.1% 94.6%, 41.6% 96.6%, 31.4% 97%, 21.2% 95%, 12% 90.8%, 4.4% 84.7%, 0% 77.6%, 0% 68%, 0% 60.1%);
+}
+
+.design--4::before {
+  clip-path: polygon(12.1% 48.2%, 12.7% 45%, 11.8% 41.4%, 7.3% 36.1%, 5.1% 29.7%, 0% 10.6%, 0% 4.7%, 14.5% 1%, 32.5% 2.8%, 48.2% 5.7%, 59.6% 15.2%, 69.2% 18.7%, 78.9% 21%, 87.2% 24.5%, 79.8% 34.7%, 83.1% 37.9%, 86.7% 41%, 89.5% 44.5%, 93.4% 48.2%, 98.9% 52.7%, 97.1% 57.3%, 93.3% 61.5%, 87.1% 64.8%, 100% 80.9%, 96.8% 91.1%, 81.4% 94.8%, 64.9% 96.6%, 48.2% 95%, 36.1% 83.1%, 31.6% 71.5%, 22% 71.3%, 9.1% 72%, 1.6% 68.1%, 0% 63.6%, 0.4% 57%, 0% 52.6%);
+}
+
+.design--5::before {
+  clip-path: polygon(13.9% 46.5%, 15.2% 42.2%, 20.2% 38.8%, 22.8% 35.3%, 16.5% 26.6%, 17.9% 19.4%, 24.6% 15.2%, 32.8% 12.5%, 40.7% 7.7%, 50.5% 3%, 61.7% 1.8%, 72.7% 3.8%, 83% 7.2%, 91% 12.7%, 90% 23.3%, 95.2% 28.4%, 89.8% 36.5%, 84.2% 42.4%, 83.7% 46.5%, 85.4% 50.8%, 85.8% 55.5%, 89.3% 62.2%, 89.9% 69.7%, 83.8% 74.3%, 76.4% 77.9%, 67.4% 79%, 58.7% 79.3%, 50.5% 82.8%, 40.9% 84.3%, 23.9% 97.5%, 11.6% 93.5%, 0.5% 88.1%, 7.8% 71.5%, 16.3% 60.3%, 13.5% 55.9%, 12.6% 51.2%);
+}
+
+.design--6::before {
+  clip-path: polygon(20.2% 48.4%, 17.3% 45.6%, 13% 41.9%, 12.2% 37.9%, 4.8% 30.3%, 12.3% 26.8%, 21.6% 24.3%, 20.8% 9.1%, 35.4% 5.3%, 51.9% 0%, 71.4% 0%, 90.2% 0.1%, 100% 4.3%, 88.6% 28.3%, 95.1% 31.8%, 97% 36.5%, 95.5% 41.1%, 91.8% 45.2%, 95.4% 48.4%, 94.7% 51.9%, 92.7% 55.2%, 100% 61.6%, 97% 65.8%, 89.8% 69.1%, 81.2% 71.7%, 85.5% 90.8%, 70.7% 97.4%, 51.9% 100%, 32.3% 99.6%, 14% 96.3%, 0.3% 89.5%, 2.2% 75.6%, 8.7% 65.1%, 3.9% 61.2%, 0% 57.1%, 2.8% 52.4%);
+}
+
+.design--7::before {
+  clip-path: polygon(9.1% 42.4%, 17.1% 37.7%, 12.9% 31.3%, 13.3% 24.9%, 16.7% 19.7%, 21.5% 15.3%, 27% 11.9%, 33.3% 10%, 39.9% 9.6%, 46.2% 10.4%, 52% 12.1%, 57% 15%, 76.2% 0%, 87.1% 0%, 95.1% 4.7%, 100% 13.1%, 100% 23%, 83.7% 36.3%, 84.1% 42.4%, 81.3% 48.1%, 71.8% 51%, 59.7% 49.6%, 57.7% 51.3%, 60.8% 58.4%, 61.2% 66.4%, 58.6% 73.7%, 53.4% 79.9%, 46.2% 100%, 35% 100%, 24.1% 98.1%, 21.6% 81.6%, 14.6% 77.1%, 8.8% 71.3%, 4.3% 64.7%, 3% 56.9%, 4.1% 49.2%);
+}
+
+.design--8::before {
+  clip-path: polygon(3.2% 53.1%, 4% 45.2%, 7% 37.8%, 5.2% 28%, 8.1% 18.9%, 15% 12.4%, 23% 7.1%, 32.3% 4.1%, 42% 4.2%, 51% 0%, 60.9% 0.1%, 69.9% 4.1%, 72.5% 17.8%, 84% 15.8%, 90.3% 21.8%, 96% 28.5%, 100% 36.2%, 100% 44.5%, 98.6% 53.1%, 97.9% 60.9%, 100% 70.5%, 99.3% 79.5%, 93.8% 87%, 85.5% 91.9%, 75.3% 92.8%, 65% 89.3%, 56.8% 84.2%, 51% 98.9%, 42.5% 99%, 30.9% 100%, 20.7% 100%, 12.1% 97.1%, 6.1% 88.8%, 2.2% 79.8%, 0% 71.3%, 14.2% 59.2%);
+}
+
+.design--9::before {
+  clip-path: polygon(0.8% 50.1%, 8.8% 45.1%, 0% 37.1%, 0% 28.6%, 0% 19.3%, 4.1% 12.8%, 13% 6.1%, 24.5% 1.4%, 37.5% 0%, 51% 4.5%, 61.8% 9%, 71.2% 13%, 80.6% 15.9%, 88.3% 20.4%, 92.5% 26.9%, 88.1% 35.8%, 91.8% 40.2%, 94.5% 45%, 95.2% 50.1%, 100% 56.1%, 100% 63.3%, 100% 69.5%, 100% 78.9%, 100% 89.4%, 91.4% 96.9%, 78.7% 100%, 65% 100%, 51% 92.3%, 41.3% 86.8%, 33.8% 81.7%, 25.3% 79.9%, 18% 76.4%, 11.7% 72.1%, 5% 67.8%, 1.1% 62.2%, 0% 56.2%);
+}
+
+/* Inside the designs' layer, back to front: the bare back, the designs
+   (the one that lands on the back among them), the tattooed back that is
+   stuck over both at the end, and the machine that works on it. */
+.has-scene .design { z-index: 2; }
+.has-scene .designs-machine { z-index: 5; }
+
+/* The man's back (src/backpiece.js): a 3:4 box in the middle, taller than
+   the frame (--back-height) so the bottom edge cuts it at about the waist
+   band while the head just fits at the top. Centred with a negative margin,
+   not a transform: a transform would make the box its own layer, and its two
+   images must sit either side of the design. They are moved one by one,
+   never the box. */
+.has-scene .backpiece {
+  --back-height: calc(108vh + 0.4 * var(--gap));
+  display: block;
+  position: absolute;
+  left: 50%;
+  bottom: -5.4vh;
+  width: calc(var(--back-height) * 0.75);
+  height: var(--back-height);
+  margin-left: calc(var(--back-height) * -0.375);
+}
+
+.backpiece img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  visibility: hidden;
+  filter: drop-shadow(calc(0.4 * var(--u)) calc(0.7 * var(--u)) calc(1.2 * var(--u)) rgb(0 0 0 / 0.35));
+}
+
+.backpiece-bare { z-index: 1; }
+.backpiece-done { z-index: 4; }
+
+/* The ink the machine leaves (src/backpiece.js): over the bare back and the
+   design, under the finished back that is stuck over it all. */
+.backpiece-ink {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* ---------- The mole's speech bubble (see src/hero-life.js) ---------- */
+
+/* Inside the mole sticker, so it goes wherever the mole goes. --bubble sets
+   its width; it's placed so the tail's tip (9% / 94% of the bubble image)
+   touches the mole's mouth (53% / 44% of the mole). With the scene it stays
+   hidden until it pops out, a few seconds after the intro. */
+.mole-bubble {
+    --bubble: calc(17 * var(--u));
+    position: absolute;
+    left: calc(62% - 0.09 * var(--bubble));
+    top: calc(60% - 0.94 * var(--bubble) / 1.5);
+    width: var(--bubble);
+    aspect-ratio: 3 / 2;
+    transform-origin: 9% 94%;
+}
+
+.has-scene .mole-bubble {
+  visibility: hidden;
+}
+
+.mole-bubble img {
+  width: 100%;
+  height: auto;
+}
+
+/* In the white of the bubble, in the type of "Fájni fog.". */
+.mole-bubble-text {
+      position: absolute;
+    left: 14%;
+    top: 16%;
+    width: 76%;
+    height: 52%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: var(--font-hand);
+    font-size: calc(1.9 * var(--u));
+    line-height: 1;
+    color: var(--ink);
+    white-space: nowrap;
+    rotate: -3deg;
+}
+
+/* ---------- Scrollbar ---------- */
+
+/* Thin, black, with a pink thumb. Chromium/Safari take the ::-webkit-
+   pseudo-elements (which allow the exact width) — but only while the
+   standard properties are left at auto, hence the @supports; Firefox,
+   which has no ::-webkit-scrollbar, uses the standard ones. */
+html,
+body {
+  scrollbar-width: thin;
+  scrollbar-color: var(--pink) var(--ink);
+}
+
+@supports selector(::-webkit-scrollbar) {
+  html,
+  body {
+    scrollbar-width: auto;
+    scrollbar-color: auto;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ink);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--pink);
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ff3aa6;
+}
+
+/* ---------- Ink trail (see src/ink-trail.js) ---------- */
+
+/* Over everything but the zoomed pictures; never in the pointer's way. */
+.ink-trail {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 55;
+  pointer-events: none;
+}
+
+/* ---------- Paintings (see src/paintings.js) ---------- */
+
+/* Without the scroll scene: the drawings, then the paintings, as plain
+   wrapped rows after the designs. The pictos only belong to the scene. */
+.paintings {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(3 * var(--u));
+  padding: calc(6 * var(--u)) 2.5vw;
+}
+
+.paintings-picto {
+  display: none;
+}
+
+.paintings-strip {
+  display: flex;
+  flex-direction: column;
+  gap: calc(3 * var(--u));
+}
+
+.paintings-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: calc(3 * var(--u));
+}
+
+/* Every picture the same height (--painting-height); widths follow each
+   picture's own shape. */
+.painting {
+  --painting-height: calc(18 * var(--u));
+  display: block;
+  height: var(--painting-height);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+
+/* The pictures are plain rectangles: a box-shadow on the picture is far
+   cheaper to redraw than a drop-shadow filter over the whole card while it
+   moves and tips. The pin keeps a small filter shadow of its own. */
+.painting-face > img:first-child {
+  box-shadow: calc(0.3 * var(--u)) calc(0.5 * var(--u)) calc(0.9 * var(--u)) rgb(0 0 0 / 0.35);
+}
+
+.painting-pin {
+  filter: drop-shadow(calc(0.15 * var(--u)) calc(0.25 * var(--u)) calc(0.3 * var(--u)) rgb(0 0 0 / 0.35));
+}
+
+/* The face is what tips on hover, so the pin stuck in the top goes with
+   the picture. */
+.painting-face {
+  position: relative;
+  display: block;
+  width: auto;
+  height: 100%;
+}
+
+.painting-face > img:first-child {
+  display: block;
+  width: auto;
+  height: 100%;
+  max-width: none;
+}
+
+.painting-pin {
+  position: absolute;
+  left: 50%;
+  top: calc(-1.7 * var(--u));
+  width: calc(3.6 * var(--u));
+  translate: -45% 0;
+  max-width: none;
+}
+
+/* The top row (drawings) starts a little behind the bottom one. */
+.has-scene .paintings-row:first-child {
+  padding-left: calc(16 * var(--u));
+}
+
+/* With the scene: over the stage between the folder's layers, the two rows
+   in a strip parked just right of the frame (like the works). The strip is
+   as wide as its longer row; the rows run from `top`, drawings above. */
+.has-scene .paintings {
+  position: absolute;
+  inset: 0;
+  z-index: 17;
+  display: block;
+  padding: 0;
+  pointer-events: none;
+}
+
+.has-scene .paintings-strip {
+  position: absolute;
+  left: calc(100% + 3 * var(--u));
+  /* Like the works' (the two rows are about 50u high). */
+  top: max(12%, 54.5vh - 24.5 * var(--u));
+  gap: calc(4 * var(--u));
+  visibility: hidden;
+}
+
+.has-scene .paintings-row {
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  gap: calc(3.5 * var(--u));
+}
+
+.has-scene .painting {
+  --painting-height: calc(22 * var(--u));
+  flex: none;
+  opacity: var(--opacity, 1);
+}
+
+.has-scene .paintings-picto {
+  display: block;
+}
+
+/* The two pictos swapped in for this act: the crown drops in from the top,
+   the heart slides in from the left. The pictures pass over them. */
+.paintings-picto--crown {
+  left: 46%;
+  top: 12%;
+  width: calc(10 * var(--u));
+  rotate: -8deg;
+}
+
+.paintings-picto--heart {
+  left: 7%;
+  top: 66%;
+  width: calc(9 * var(--u));
+  rotate: 10deg;
+}
+
+/* ---------- The cat's speech bubble and the caption by "Ne parázz!" ---------- */
+
+/* The cat picto is a wrapper (span > img) carrying its bubble, like the mole.
+   The bubble image is turned 180°, so its tail's tip is at 91% / 6% of the
+   bubble and the bubble hangs down-left of the cat's mouth (48% / 62%). */
+.designs-picto--cat > img {
+  display: block;
+  width: 100%;
+}
+
+.cat-bubble {
+  --bubble: calc(26 * var(--u));
+  position: absolute;
+  left: calc(48% - 0.91 * var(--bubble));
+  top: calc(80% - 0.06 * var(--bubble) / 1.5);
+  width: var(--bubble);
+  aspect-ratio: 3 / 2;
+  transform-origin: 91% 6%;
+  visibility: hidden;
+}
+
+.cat-bubble > img {
+  width: 100%;
+  height: auto;
+  rotate: 180deg;
+}
+
+.cat-bubble-text {
+  position: absolute;
+  left: 10%;
+  top: 30%;
+  width: 76%;
+  height: 52%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: var(--font-hand);
+  font-size: calc(2.6 * var(--u));
+  line-height: 1;
+  color: var(--ink);
+  white-space: nowrap;
+  rotate: 0deg;
+}
+
+/* "Nem olyan vészes…" in the gap between the upright "Ne parázz!" and the
+   back, in the subtitles' type; src/backpiece.js brings it in. */
+.designs-caption {
+  display: none;
+}
+
+.has-scene .designs-caption {
+    display: block;
+    position: absolute;
+    z-index: 6;
+    left: calc(3.5vw + 9.2 * var(--u));
+    top: 40%;
+    font-family: var(--font-mono);
+    font-size: calc(1.55 * var(--u));
+    line-height: 1.33;
+    letter-spacing: 0.05rem;
+    white-space: nowrap;
+    color: var(--ink);
+    visibility: hidden;
+    font-weight: 600;
+}
+
+/* ---------- The paintings' note: what the pins mean ---------- */
+
+.paintings-note {
+  --note-width: calc(31 * var(--u));
+  order: -1;
+  position: relative;
+  width: var(--note-width);
+  aspect-ratio: 1550 / 1015;
+}
+
+/* The same torn paper as the works' note, mirrored the same way. */
+.paintings-note-paper {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  transform: rotate(-4deg) scaleX(-1);
+  filter: drop-shadow(calc(-0.3 * var(--u)) calc(0.48 * var(--u)) calc(0.6 * var(--u)) rgb(0 0 0 / 0.3));
+}
+
+.paintings-note-list {
+  position: absolute;
+  left: 22%;
+  top: 26%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-hand);
+  font-size: calc(var(--note-width) * 0.1);
+  line-height: 1.05;
+  color: var(--ink);
+  white-space: nowrap;
+  transform: rotate(-6deg);
+  transform-origin: left center;
+}
+
+.paintings-note-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+}
+
+.paintings-note-list img {
+  width: 1.3em;
+  max-width: none;
+}
+
+/* With the scene it comes out of the folder first and waits beside its
+   mouth, level with the lower row, above the pictures. */
+.has-scene .paintings-note {
+  position: absolute;
+  left: calc(100% + 3 * var(--u));
+  top: 60%;
+}
+
+/* ---------- The hand that pulls the folder away (see src/news.js) ---------- */
+
+/* Parked just right of the frame, over the folder's front cover, level
+   with the middle; its fingers (on the left) grab the folder. */
+.folder-hand {
+  position: absolute;
+  left: 100%;
+  --hw: 70vh;
+  top: calc(50% - 0.3 * var(--hw));
+  z-index: 41;
+  width: var(--hw);
+  max-width: none;
+  pointer-events: none;
+  filter: drop-shadow(calc(0.4 * var(--u)) calc(0.7 * var(--u)) calc(1.2 * var(--u)) rgb(0 0 0 / 0.35));
+}
+
+/* ---------- News ("Mi újság", see src/news.js) ---------- */
+
+/* Without the scene: a plain row of the four after the paintings. */
+.news {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: calc(5 * var(--u));
+  padding: calc(6 * var(--u)) 2.5vw calc(10 * var(--u));
+}
+
+.news-picto,
+.news-portrait {
+  display: none;
+}
+
+/* A polaroid-like photo with its caption in Tira's hand; the photo (face)
+   tips on hover like the other pictures, the caption stays put. */
+.news-item {
+  position: relative;
+  display: block;
+  width: calc(15 * var(--u));
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  filter: drop-shadow(calc(0.3 * var(--u)) calc(0.5 * var(--u)) calc(0.7 * var(--u)) rgb(0 0 0 / 0.3));
+}
+
+.news-item::before {
+  clip-path: inset(3% 5%);
+}
+
+.news-face {
+  display: block;
+}
+
+.news-face img {
+  width: 100%;
+  height: auto;
+}
+
+.news-label {
+  position: absolute;
+  font-family: var(--font-hand);
+  font-size: calc(3 * var(--u));
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--ink);
+  pointer-events: none;
+}
+
+.news-underline {
+  position: absolute;
+  left: -10%;
+  top: 0.62em;
+  width: 120%;
+  max-width: none;
+  rotate: 6deg;
+}
+
+/* The arrow (its head bottom-left) above the caption, pointing down-left
+   at the photo. */
+.news-arrow {
+  position: absolute;
+  left: 30%;
+  top: -1.35em;
+  width: 1.6em;
+  max-width: none;
+  rotate: 12deg;
+}
+
+/* With the scene: over the stage, each photo hidden until it pops up
+   around the title. Places: top-left corner in % of the frame, width in
+   --u, tilt, own hover turn; the caption placed from the photo. */
+.has-scene .news {
+  /* The room left of Kriszti (where she starts): the news are placed in
+     shares of it, so they never run into her. */
+  --room: calc(163.9vh + 0.85 * var(--gap));
+  /* Where the title's middle lands (src/news.js): x as a share of the room,
+     y of the height. */
+  --title-x: 0.56;
+  --title-y: 0.7;
+  position: absolute;
+  inset: 0;
+  z-index: 18;
+  display: block;
+  padding: 0;
+  pointer-events: none;
+}
+
+.has-scene .news-item {
+  position: absolute;
+  visibility: hidden;
+}
+
+.has-scene .news-picto {
+  display: block;
+  position: absolute;
+}
+
+/* Kriszti on the right edge, her lower part below the frame like in the
+   hero. */
+.has-scene .news-portrait {
+  display: block;
+  position: absolute;
+  right: calc(-17.5vh + 0.15 * var(--gap));
+  bottom: -10%;
+  width: 72.1vh;
+  aspect-ratio: 3 / 4;
+  max-width: none;
+  object-fit: contain;
+  object-position: bottom;
+  visibility: hidden;
+  filter: saturate(1.06) contrast(1.04) drop-shadow(0 calc(0.6 * var(--u)) calc(1.4 * var(--u)) rgb(0 0 0 / 0.35));
+}
+
+/* ===== News layout — EDIT HERE =====
+   One line per photo:
+     left          where its left edge sits, as a share of the room left of
+                   Kriszti (var(--room)); top in % of the screen
+     width         its size, in --u (1u ≈ 1% of a 16:9 screen's width);
+                   the photos are 2:3, so the height is 1.5 × the width
+     rotate        its tilt at rest
+     --hover-*     how it tips and grows on hover
+     z-index       which one lies on top where they overlap
+   The title ("Mi újság") sits over all of them; its place is TITLE_AT in
+   src/news.js. */
+.news-item--1 { left: calc(var(--room) * 0.040);  top: 14%; width: calc(20 * var(--u)); rotate: -6deg; z-index: 2; --hover-turn: 7deg;  --hover-scale: 1.04; }
+.news-item--2 { left: calc(var(--room) * 0.347); top: 7%;  width: calc(20 * var(--u)); rotate: 5deg;  z-index: 1; --hover-turn: -6deg; --hover-scale: 1.05; }
+.news-item--3 { left: calc(var(--room) * 0.170); top: 60%; width: calc(17 * var(--u)); rotate: 7deg;  z-index: 3; --hover-turn: -8deg; --hover-scale: 1.06; }
+.news-item--4 { left: calc(var(--room) * 0.760); top: 50%; width: calc(21 * var(--u)); rotate: -4deg; z-index: 2; --hover-turn: 6deg;  --hover-scale: 1.04; }
+.news-item--5 { left: calc(var(--room) * 0.653); top: 7%;  width: calc(20 * var(--u)); rotate: -1deg; z-index: 3; --hover-turn: 1deg;  --hover-scale: 1.06; }
+
+/* Each caption, from its photo's top-left corner (in % of the photo). */
+.news-item--1 .news-label { left: 5%; top: 97%; rotate: -4deg; }
+.news-item--2 .news-label { left: 85%; top: 30%; rotate: 75deg; }
+.news-item--3 .news-label { left: 94%; top: 55%; rotate: -5deg; }
+.news-item--4 .news-label { left: 95%; top: 58%; rotate: 4deg; }
+.news-item--5 .news-label { left: 98%; top: 48%; rotate: -6deg; }
+
+/* The two pictos swapped in for this act. */
+.news-picto--smiley {
+  left: calc(var(--room) * 0.667);
+  top: 86%;
+  width: calc(6.5 * var(--u));
+  rotate: 10deg;
+}
+
+.news-picto--bandaid {
+  left: 3%;
+  top: 76%;
+  width: calc(11 * var(--u));
+  rotate: -12deg;
+}
+
+/* ---------- News gallery (see src/news-gallery.js) ---------- */
+
+/* Over everything (the ink trail and the header included). The big picture
+   (square, --gallery-size) with the thumbnails under it on the left, the
+   story on a paper card on the right, × in the top right corner. */
+.gallery {
+  --gallery-size: min(70vh, 42vw);
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: grid;
+  place-items: center;
+}
+
+.gallery[hidden] {
+  display: none;
+}
+
+.gallery-veil {
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 0.72);
+  cursor: zoom-out;
+}
+
+.gallery-box {
+  position: relative;
+  display: grid;
+  --gallery-side-height: calc(var(--gallery-size) * 1.15 + 1.4 * var(--u));
+  grid-template-columns: var(--gallery-size) calc(var(--gallery-size) * 0.92);
+  grid-template-rows: auto auto;
+  column-gap: calc(3 * var(--u));
+  row-gap: calc(1.4 * var(--u));
+  align-items: start;
+}
+
+/* The picture on a white polaroid-like border. */
+.gallery-main {
+  position: relative;
+  width: var(--gallery-size);
+  aspect-ratio: 1;
+  padding: calc(0.8 * var(--u));
+  background: #fff;
+  box-shadow: 0 calc(0.8 * var(--u)) calc(2 * var(--u)) rgb(0 0 0 / 0.45);
+  rotate: -1.5deg;
+}
+
+.gallery-image {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+}
+
+.gallery-nav {
+  position: absolute;
+  top: 50%;
+  width: calc(4.2 * var(--u));
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ink);
+  color: #fff;
+  cursor: pointer;
+  translate: 0 -50%;
+  transition: background-color 0.2s, scale 0.2s;
+}
+
+.gallery-nav[hidden] {
+  display: none;
+}
+
+.gallery-nav svg {
+  width: 55%;
+  height: 55%;
+}
+
+.gallery-nav--prev {
+  left: calc(-2.1 * var(--u));
+}
+
+.gallery-nav--next {
+  right: calc(-2.1 * var(--u));
+}
+
+.gallery-nav--next svg {
+  scale: -1 1;
+}
+
+.gallery-nav:hover,
+.gallery-nav:focus-visible {
+  background: var(--pink);
+  scale: 1.1;
+}
+
+/* The rest of the gallery as small squares; the one on show is outlined. */
+.gallery-thumbs {
+  grid-column: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(0.8 * var(--u));
+}
+
+.gallery-thumb {
+  width: calc(var(--gallery-size) / 7 - 0.7 * var(--u));
+  aspect-ratio: 1;
+  padding: calc(0.25 * var(--u));
+  border: 0;
+  background: #fff;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s, scale 0.2s;
+}
+
+.gallery-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery-thumb:hover,
+.gallery-thumb[aria-current='true'] {
+  opacity: 1;
+}
+
+.gallery-thumb[aria-current='true'] {
+  outline: calc(0.3 * var(--u)) solid var(--pink);
+  scale: 1.06;
+}
+
+/* The story, on a paper card. */
+/* As tall as the picture and its thumbnails together (never taller, however
+   long the story); the story scrolls inside it. */
+.gallery-side {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  height: var(--gallery-side-height);
+  min-height: 0;
+  /* The torn paper (gallery-bg), stretched a little wider than its own 2:3
+     to give the story room, as tall as the picture and its thumbnails; the
+     padding keeps the text on its clean middle, clear of the torn edges,
+     splatter and tape (% of the width, both ways). */
+  padding: 16% 14% 24% 20%;
+  background: url('/img/gallery-bg.webp') center / 100% 100% no-repeat;
+  filter: drop-shadow(0 calc(0.6 * var(--u)) calc(1.2 * var(--u)) rgb(0 0 0 / 0.4));
+  rotate: 1.5deg;
+}
+
+.gallery-title {
+  position: relative;
+  display: inline-block;
+  margin: 0 0 calc(2.8 * var(--u));
+  font-family: var(--font-hand);
+  font-size: calc(3.8 * var(--u));
+  font-weight: 400;
+  line-height: 1;
+  color: var(--ink);
+  align-self: flex-start;
+}
+
+.gallery-underline {
+  position: absolute;
+  left: -4%;
+  top: 0.72em;
+  width: 100%;
+  max-width: none;
+  z-index: -1;
+}
+
+.gallery-text {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* The last lines fade out at the bottom edge: there is more below. */
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 2.5 * var(--u)), transparent);
+  padding-bottom: calc(2 * var(--u));
+  padding-right: calc(1 * var(--u));
+  scrollbar-width: thin;
+  scrollbar-color: var(--pink) transparent;
+  font-family: var(--font-mono);
+  font-size: calc(1.35 * var(--u));
+  line-height: 1.5;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+}
+
+.gallery-count {
+  margin-top: calc(0.8 * var(--u));
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: calc(1 * var(--u));
+  letter-spacing: 0.1em;
+  color: var(--pink);
+  align-self: center;
+}
+
+.gallery-close {
+  position: absolute;
+  top: calc(-2.4 * var(--u));
+  right: calc(-2.4 * var(--u));
+  width: calc(4.4 * var(--u));
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--pink);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: calc(3.2 * var(--u));
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.2s, rotate 0.25s;
+}
+
+.gallery-close:hover,
+.gallery-close:focus-visible {
+  background: var(--ink);
+  rotate: 90deg;
+}
+
+/* Photos that change now and then (src/news-life.js): the pictures laid on
+   top of each other in the face, the first one in the flow giving the size.
+   The others wait hidden until they are stuck on. */
+.news-face img {
+  position: relative;
+}
+
+.news-face .news-alt {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  visibility: hidden;
+}
+
+/* ---------- Contact ("Mikor jössz?", see src/contact.js) ---------- */
+
+/* The three texts of the title are laid on the same spot; only one shows at
+   a time (their letters are faded in and out by the script). */
+/* A touch smaller than the other titles: its longest text ("Mit szeretnél?")
+   has to end before Kriszti's head. */
+.hero-title .title-cycle {
+  font-size: 0.8em;
+}
+
+.title-cycle .ink + .ink {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.title-cycle .ink {
+  white-space: nowrap;
+}
+
+/* Without the scene: a plain block after the news. */
+.contact {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: calc(6 * var(--u)) 2.5vw calc(10 * var(--u));
+}
+
+.contact-picto,
+.contact-stack,
+.contact-sticker {
+  display: none;
+}
+
+.contact-heading {
+  font-family: var(--font-display);
+  font-size: calc(8.4 * var(--u));
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.contact-where {
+    margin-top: calc(-2.5 * var(--u));
+    margin-bottom: calc(3.3 * var(--u));
+    margin-left: calc(2 * var(--u));
+    font-family: var(--font-mono);
+    font-size: calc(1.57 * var(--u));
+    font-weight: 600;
+    letter-spacing: 0.05rem;
+    color: var(--ink);
+    rotate: -4deg;
+}
+
+/* The e-mail address, a size up, copied on click. */
+/* The e-mail address, a size up, copied on click: a black tag with a pink
+   frame and a solid pink offset shadow, turned a touch — like a sticker.
+   On hover it's pressed in (the shadow shrinks as it moves onto it). */
+.contact-mail {
+  margin-top: calc(0.4 * var(--u));
+  padding: calc(0.9 * var(--u)) calc(1.6 * var(--u));
+  border: calc(0.22 * var(--u)) solid var(--pink);
+  background: var(--ink);
+  box-shadow: calc(0.6 * var(--u)) calc(0.6 * var(--u)) 0 var(--pink);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: calc(2.1 * var(--u));
+  letter-spacing: 0.03em;
+  color: #fff;
+  cursor: copy;
+  pointer-events: auto;
+  rotate: -1.5deg;
+  transition: translate 0.15s, box-shadow 0.15s, background-color 0.2s;
+}
+
+.contact-mail:hover,
+.contact-mail:focus-visible {
+  translate: calc(0.3 * var(--u)) calc(0.3 * var(--u));
+  box-shadow: calc(0.3 * var(--u)) calc(0.3 * var(--u)) 0 var(--pink);
+  outline: none;
+}
+
+.contact-mail:active {
+  translate: calc(0.6 * var(--u)) calc(0.6 * var(--u));
+  box-shadow: 0 0 0 var(--pink);
+}
+
+/* Above the address: "katt a másoláshoz" / "másolva" in Tira's hand, with
+   the arrow (arrow.webp points down-left; turned a little further it
+   points down) at the address. Kept small so it doesn't outshout it. */
+.contact-hint {
+  position: relative;
+    display: flex;
+    align-items: flex-end;
+    gap: calc(0.3 * var(--u));
+    margin: calc(0.6 * var(--u)) 0 calc(1.2 * var(--u)) calc(15 * var(--u));
+    font-family: var(--font-hand);
+    font-size: calc(1.9 * var(--u));
+    line-height: 1;
+    color: var(--ink);
+    pointer-events: none;
+}
+
+.contact-arrow {
+  width: calc(3.2 * var(--u));
+  max-width: none;
+  transform: rotate(-122deg);
+  margin-bottom: calc(0.2 * var(--u));
+}
+
+.contact-hint-text {
+  margin-bottom: calc(0.6 * var(--u));
+  rotate: -4deg;
+}
+
+.contact-socials {
+  display: flex;
+  align-items: center;
+  gap: calc(1.2 * var(--u));
+  margin-top: calc(2.4 * var(--u));
+}
+
+.contact-socials .social-btn {
+  height: calc(6 * var(--u));
+  pointer-events: auto;
+}
+
+/* With the scene: over the stage, laid out like the hero. */
+.has-scene .contact {
+  position: absolute;
+  inset: 0;
+  z-index: 19;
+  display: block;
+  padding: 0;
+  pointer-events: none;
+}
+
+/* The heading is the title block's job in the scene (kept for screen
+   readers). */
+.has-scene .contact-heading {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.has-scene .contact-picto,
+.has-scene .contact-sticker {
+  display: block;
+}
+
+.has-scene .contact-sticker {
+  visibility: hidden;
+}
+
+/* Kriszti, a little left of where she stands in the hero; the last pose on
+   top, the others waiting hidden (src/hero-life.js cycles them). */
+.has-scene .contact-stack {
+  display: block;
+  position: absolute;
+  right: calc(26.2vh + 0.25 * var(--gap));
+  bottom: -10%;
+  width: 72.1vh;
+  aspect-ratio: 3 / 4;
+  z-index: 3;
+  visibility: hidden;
+  pointer-events: none;
+  filter: saturate(1.06) contrast(1.04) drop-shadow(0 calc(0.6 * var(--u)) calc(1.4 * var(--u)) rgb(0 0 0 / 0.35));
+}
+
+.contact-stack img {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: auto;
+}
+
+.contact-stack img:not(:last-child) {
+  visibility: hidden;
+}
+
+/* Under the title, like the hero's subtitle; above Kriszti. */
+.has-scene .contact-info {
+  position: absolute;
+  left: calc(var(--intro-left) + 2.1 * var(--u));
+  top: calc(var(--intro-top) + 13.8 * var(--u));
+  z-index: 6;
+  visibility: hidden;
+}
+
+/* ===== Contact layout — EDIT HERE =====
+   The five stickers, like the hero's, sized in vh and placed from their own
+   edge (left / right, top / bottom in % or vh); the "var(--gap)" share is
+   how far they slide out over that edge on narrower windows. Tilt and own
+   hover turn too. data-from in index.html says which edge each one glides
+   in from. */
+.contact-sticker--2  { left: calc(-4.4vh + 0.4 * var(--gap));  top: 17%; width: 37.1vh; rotate: -10deg; z-index: 2; --hover-turn: -7deg; --hover-scale: 1.05; }
+.contact-sticker--8  { left: calc(15.5vh + 0.4 * var(--gap));  top: 26%; width: 43.7vh; rotate: 7deg;   z-index: 2; --hover-turn: 6deg;  --hover-scale: 1.04; }
+.contact-sticker--4  { left: calc(-10.9vh + 0.2 * var(--gap)); bottom: -5.3vh; width: 48.1vh; rotate: -6deg; z-index: 3; --hover-turn: -9deg; --hover-scale: 1.06; }
+.contact-sticker--9  { right: calc(-6.6vh + 0.15 * var(--gap)); top: 3%; width: 48.1vh; rotate: 12deg;  z-index: 2; --hover-turn: 7deg;  --hover-scale: 1.05; }
+.contact-sticker--11 { right: calc(-8.7vh + 0.15 * var(--gap)); bottom: -20vh; width: 48.1vh; rotate: -8deg; z-index: 4; --hover-turn: -6deg; --hover-scale: 1.04; }
+
+/* The two pictos of this act. */
+.contact-picto--crown {
+  left: calc(43.7vh + 0.3 * var(--gap));
+  top: 82%;
+  width: calc(9 * var(--u));
+  rotate: -8deg;
+}
+
+.contact-picto--cat {
+  right: calc(38.2vh + 0.25 * var(--gap));
+  top: 8%;
+  width: calc(8 * var(--u));
+  rotate: 6deg;
+}
+
+/* Hover outlines of the contact stickers (traced from their alpha). */
+.contact-sticker--2::before {
+  clip-path: polygon(15.7% 43.8%, 13.9% 40.6%, 14.8% 37.4%, 11% 32.6%, 8% 26.3%, 8.2% 19.1%, 11% 10.3%, 20.4% 3.2%, 34.7% 0%, 50.5% 0%, 66.4% 0%, 80.8% 3.1%, 89.9% 10.5%, 92.4% 19.3%, 92.2% 26.7%, 89.2% 32.9%, 85.4% 37.6%, 85.5% 40.8%, 84.4% 43.8%, 85.2% 46.8%, 85.6% 50%, 85.6% 53.7%, 85% 58%, 84.6% 63.7%, 83.7% 71.9%, 82.9% 87.3%, 70.4% 98.9%, 50.5% 99.7%, 30.8% 98.5%, 20.8% 83.7%, 18.3% 71.1%, 17.3% 63.2%, 16.8% 57.6%, 16.5% 53.4%, 15.1% 50.1%, 15.1% 46.9%);
+}
+
+.contact-sticker--4::before {
+  clip-path: polygon(12.5% 46.6%, 10.6% 39.6%, 9.2% 31.7%, 11.2% 24.1%, 15.9% 17.6%, 24% 14.6%, 29.7% 9.6%, 34.7% 1.2%, 43.2% 0%, 52% 0%, 60.1% 2.7%, 68.4% 3.6%, 75.9% 7%, 82.4% 12%, 86% 19.3%, 88.5% 26.4%, 89.9% 33.4%, 90.2% 40.1%, 85.9% 46.6%, 90.3% 53%, 94.7% 61.4%, 97% 71.4%, 91.8% 78.5%, 85.4% 84.6%, 75.3% 85.2%, 67% 85.8%, 60.8% 94.4%, 52% 95.2%, 43.2% 94.4%, 35.5% 89.9%, 29.6% 83.6%, 25.4% 76.9%, 21.7% 70.8%, 13.5% 67.8%, 10.2% 61.1%, 8.3% 53.9%);
+}
+
+.contact-sticker--8::before {
+  clip-path: polygon(16.6% 48%, 13.9% 44.4%, 8.5% 39.5%, 9% 34.6%, 9.3% 28.7%, 10% 21%, 16% 14.6%, 24.2% 7.6%, 36.6% 3.6%, 50.6% 1.6%, 66.4% 0%, 81.7% 0.4%, 94.3% 5.9%, 94.2% 19.1%, 93.2% 28.1%, 89.5% 35.5%, 87% 40.6%, 83.5% 44.8%, 81.8% 48%, 81.2% 51%, 83.4% 54.7%, 84.8% 59%, 85.9% 64.5%, 84.8% 70.7%, 85.1% 81.3%, 80.3% 93.4%, 67.2% 100%, 50.6% 100%, 34.6% 98.8%, 19.8% 95.2%, 14.2% 83.2%, 14.1% 72.3%, 13.6% 65.4%, 15.9% 59.2%, 16.9% 54.9%, 17.3% 51.3%);
+}
+
+.contact-sticker--9::before {
+  clip-path: polygon(14.9% 49.1%, 11.3% 45%, 11.5% 40.6%, 12.5% 36%, 11.4% 29.5%, 13.5% 22.8%, 21.1% 18.7%, 30.3% 15.9%, 36% 0%, 50.7% 0%, 65.4% 0%, 78% 4.4%, 86.4% 12.2%, 86.9% 23.4%, 93.8% 27.6%, 84.9% 37.4%, 80.3% 42.7%, 81.8% 45.8%, 85.4% 49.1%, 86.4% 52.9%, 87.6% 57.1%, 88.4% 62.1%, 85.8% 66.7%, 84.6% 73.2%, 79.7% 79.1%, 78% 93.9%, 66% 100%, 50.7% 100%, 36% 98.4%, 25.9% 89.6%, 20.1% 80.6%, 17.2% 72.8%, 13.5% 67.7%, 12.2% 62.3%, 12.4% 57.4%, 17.6% 52.6%);
+}
+
+.contact-sticker--11::before {
+  clip-path: polygon(16% 48%, 13.5% 43.5%, 13.8% 38.9%, 16.4% 34.5%, 16.1% 28.2%, 15.8% 19.7%, 20.3% 12%, 28.4% 5.9%, 38.7% 0.2%, 51.4% 0%, 64% 0.3%, 75.3% 4.2%, 83.9% 10.4%, 87.9% 19%, 89.3% 26.8%, 89.2% 33.4%, 88.4% 39%, 82.2% 44.4%, 78.8% 48%, 81.4% 51.5%, 81.8% 55.4%, 83.1% 60.2%, 84.3% 66.4%, 80.9% 71.5%, 84.3% 86%, 76% 93%, 65.2% 100%, 51.4% 100%, 37.7% 99.8%, 26.1% 94.3%, 19.8% 84.4%, 18.9% 73.8%, 20.9% 65%, 21.5% 59.5%, 21.7% 55.2%, 16.6% 52.1%);
+}
+
+
+/* ---------- Round 12 additions ---------- */
+
+/* "Kattints, válassz, varrjuk!" over tervezes-5, part of its button so it
+   comes and goes with it. */
+.design-note {
+  position: absolute;
+  left: -15%;
+  bottom: 101%;
+  font-family: var(--font-hand);
+  font-size: calc(2.3 * var(--u));
+  line-height: 1;
+  white-space: nowrap;
+  text-align: center;
+  color: var(--ink);
+  rotate: 4deg;
+  pointer-events: none;
+}
+
+/* "Vigyél egyet!" under the pins' legend on the paintings' note. */
+.paintings-note-cta {
+  position: absolute;
+  left: 30%;
+  top: 65%;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: calc(var(--note-width) * 0.045);
+  color: var(--ink);
+  white-space: nowrap;
+  rotate: -6deg;
+}
+
+/* The contact cat is a wrapper now, carrying its "Na?!" on its left. */
+.contact-picto--cat > img {
+  display: block;
+  width: 100%;
+}
+
+.contact-picto-note {
+  position: absolute;
+  right: 104%;
+  top: 30%;
+  font-family: var(--font-hand);
+  font-size: calc(2 * var(--u));
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--ink);
+  rotate: -8deg;
+}
+
+/* The strawberry's bubble, for scrolling on past the end (src/contact.js).
+   Like the mole's: its tail's tip (9% / 94% of the bubble) on the top right
+   of the strawberry (68% / 20%). */
+.end-bubble {
+  --bubble: calc(24 * var(--u));
+  position: absolute;
+  left: calc(68% - 0.09 * var(--bubble));
+  top: calc(55% - 0.94 * var(--bubble) / 1.5);
+  width: var(--bubble);
+  aspect-ratio: 3 / 2;
+  transform-origin: 9% 94%;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.end-bubble > img {
+  width: 100%;
+  height: auto;
+}
+
+.end-bubble-text {
+  position: absolute;
+  left: 14%;
+  top: 16%;
+  width: 76%;
+  height: 52%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: var(--font-hand);
+  font-size: calc(2.1 * var(--u));
+  line-height: 1;
+  color: var(--ink);
+  white-space: nowrap;
+  rotate: -3deg;
+}
+
+/* The copyright, small, at the very bottom under the socials. */
+.contact-copyright {
+  margin-top: calc(3 * var(--u));
+  font-family: var(--font-mono);
+  font-size: calc(1.05 * var(--u));
+  letter-spacing: 0.03em;
+  color: var(--ink);
+  opacity: 0.8;
+}
+
+.has-scene .contact-copyright {
+  position: absolute;
+  left: calc(var(--intro-left) + 2.1 * var(--u));
+  bottom: 2.2%;
+  margin: 0;
+  visibility: hidden;
+}
+
+/* The story's own scrollbar: thin, pink, like the page's. */
+.gallery-text::-webkit-scrollbar {
+  width: 6px;
+}
+
+.gallery-text::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.gallery-text::-webkit-scrollbar-thumb {
+  background: var(--pink);
+  border-radius: 6px;
+}
+
+.gallery-title,
+.gallery-count {
+  flex: none;
+}
+
+/* While the page is scrolling, pictures streaming past the pointer don't
+   tip and grow one after another (src/scroll-calm.js) — only the look of the
+   hover is held back: they keep the pointer, so they can be clicked at any
+   time, and the one under the pointer tips as soon as the page rests. */
+.is-scrolling :is(.decor-tattoo, .work, .design):hover:not(.is-nudged) > img,
+.is-scrolling .painting:hover > .painting-face,
+.is-scrolling .news-item:hover > .news-face {
+  scale: none;
+  rotate: none;
+}
+
+/* ---------- Pointer & selection on the stage ---------- */
+
+/* The hero's own box covers the whole frame in every act; it takes no
+   pointer (its stickers, button and texts still do, below), so it never
+   stands in front of the later acts' pictures, texts and links. */
+.has-scene .hero {
+  pointer-events: none;
+}
+
+/* The texts on the stage can be selected and their links clicked (the acts'
+   layers otherwise let the pointer through to what lies beneath). Hidden
+   ones (visibility: hidden) never catch it. */
+.has-scene :is(
+    .hero-subtitle,
+    .title-sub,
+    .tag,
+    .designs-caption,
+    .works-note-text,
+    .paintings-note-list,
+    .paintings-note-cta,
+    .contact-where,
+    .contact-copyright,
+    .gallery-text
+  ) {
+  pointer-events: auto;
+  user-select: text;
+  cursor: text;
+}
+
+.contact-copyright a {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* =====================================================================
+   Compact view: windows between 0.85:1 and 1.55:1 (e.g. 1024 × 768).
+   (Narrower ones get the portrait view instead, at the end of the file.)
+   Designed on 4:3; --gap here measures from that shape instead (0 at 4:3
+   and wider, negative when narrower). The content unit follows the width,
+   but stops growing past 4:3 so the text keeps its size to the height and
+   the extra width opens up between the edges.
+   ===================================================================== */
+@media (max-aspect-ratio: 155/100) and (min-aspect-ratio: 85/100) {
+  :root {
+    --gap: min(0px, 100vw - 133.3vh);
+    --u: min(0.97vw, 1.293vh);
+    /* How much wider than 4:3 the window is (0 at 4:3 and narrower): the
+       text blocks take a share of it, so they stay by Kriszti. */
+    --spare: max(0px, 100vw - 133.3vh);
+    --tall: max(0px, 100vh - 75vw);
+    --intro-left: calc(33vh + 0.33 * var(--gap) + 0.05 * var(--spare));
+    /* Kriszti (hero and contact): narrower windows get her smaller and
+       further in, so her head stays in the frame; wider ones move her in
+       from the right edge, where two stickers come back. */
+    --k-width: calc(72vh + 0.4 * var(--gap));
+    --k-right: calc(-15vh - 0.2 * var(--gap) + 0.6 * var(--spare));
+    /* The picture rows of the works and the paintings: a card's width and a
+       painting's height (bigger on narrower windows than the unit alone
+       would make them). */
+    --card: calc(24 * var(--u) - 0.1 * var(--gap));
+    --painting: calc(22 * var(--u) - 0.09 * var(--gap));
+    --intro-top: calc(50vh - 17.5 * var(--u));
+    /* The black tape (grain-2) by the headline, from the headline block's
+       corner: partly behind Kriszti. */
+    --tape-x: calc(34 * var(--u));
+    --tape-y: calc(22.9 * var(--u));
+  }
+
+  /* Header: a touch bigger, or the menu would be too small to read. */
+  .nav {
+    gap: 1.6vw;
+  }
+
+  .nav a {
+    font-size: 1.15vw;
+  }
+
+  /* ---- Hero: Kriszti and the headline lead. The two stickers on the right
+     step out; Kriszti moves right and grows; the headline block sits in
+     the middle of the height; the left edge is the stickers'. ---- */
+  /* The bird up under the logo, in front of the geisha. */
+  .decor-bird {
+    width: 42vh;
+    left: calc(-8vh + 0.5 * var(--gap));
+    top: -2%;
+    z-index: 6;
+  }
+
+  .decor-plague {
+    width: 48vh;
+    left: calc(-14vh + 0.3 * var(--gap));
+    top: 33%;
+  }
+
+  .hero-tape {
+    left: var(--tape-x);
+    top: var(--tape-y);
+  }
+
+  /* Smaller on narrower windows rather than further out: its head stays. */
+  .decor-strawberry {
+    width: calc(45vh + 0.25 * var(--gap));
+    left: calc(-14vh - 0.12 * var(--gap));
+    bottom: -6vh;
+  }
+
+  .decor-cat {
+    width: 10vh;
+    left: calc(26vh + 0.12 * var(--gap));
+    top: 86%;
+  }
+
+  .decor-smiley {
+    right: calc(30vh + 0.3 * var(--gap));
+    top: 5%;
+  }
+
+  .portrait-stack,
+  .portrait-notes {
+    right: var(--k-right);
+    bottom: -14%;
+    width: var(--k-width);
+  }
+
+  /* The two stickers of the right edge, mostly over it: a little more of
+     them on wider and on narrower windows (where Kriszti leaves room). */
+  .hero-side {
+    --u: 1.45vh;
+    right: calc(-10vh + 0.25 * var(--spare) - 0.12 * var(--gap));
+  }
+
+  /* "Ő itt Tira." beside her bottom left, the arrow (mirrored) pointing up
+     at her. */
+  .tag--here {
+    left: -22%;
+    top: 71%;
+    font-size: 6.5cqw;
+  }
+
+  .tag-arrow {
+    left: -11%;
+    top: 63%;
+    transform: rotate(-45deg) scaleX(-1);
+  }
+
+  /* "Fájni fog." clear of her shoulder. */
+  .hero-hurts {
+    left: calc(10 * var(--u));
+    top: calc(43 * var(--u));
+  }
+
+  /* ---- Works and paintings: a little bigger, the rows in the middle of
+     the height. ---- */
+  .work {
+    width: var(--card);
+  }
+
+  /* In the middle of the height; on windows taller than 4:3 lower down,
+     into the room under the title (--tall: how much taller they are). */
+  .has-scene .works-strip {
+    top: calc(50vh - 1.4 * var(--card) + 0.35 * var(--tall));
+  }
+
+  .has-scene .paintings-strip {
+    top: calc(50vh - 1.14 * var(--painting) + 0.35 * var(--tall));
+  }
+
+  .has-scene .painting {
+    --painting-height: var(--painting);
+  }
+
+  /* The hand in proportion to the folder (which is 80vw long). */
+  .folder-hand {
+    --hw: min(70vh, 51vw);
+  }
+
+  /* ---- Designs: arranged for the narrower frame, leaving the title
+     (bottom left), the machine and the note above tervezes-5 free. ---- */
+  .design--1 { left: 1%;  top: 42%; width: calc(16 * var(--u)); }
+  .design--2 { left: 4%;  top: 15%; width: calc(22 * var(--u)); }
+  .design--3 { left: 24%; top: 9%;  width: calc(22 * var(--u)); }
+  .design--4 { left: 38%; top: 14%; width: calc(25 * var(--u)); }
+  .design--5 { left: 43%; top: 50%; width: calc(21 * var(--u)); }
+  .design--6 { left: 18%; top: 38%; width: calc(13 * var(--u)); }
+  .design--7 { left: 56%; top: 55%; width: calc(29 * var(--u)); }
+  .design--8 { left: 71%; top: 72%; width: calc(22 * var(--u)); }
+  .design--9 { left: 57%; top: 10%;  width: calc(28 * var(--u)); }
+
+  /* "Kattints, válassz, varrjuk!" under tervezes-5, in the free space at
+     the bottom (above it, it would hide behind the others). */
+  .design-note {
+    left: 5%;
+    top: 101%;
+    bottom: auto;
+  }
+
+  .designs-machine {
+    left: 84%;
+    top: 44%;
+    width: calc(15 * var(--u));
+  }
+
+  /* ---- The back: smaller, still cut at the waist. ---- */
+  .has-scene .backpiece {
+    --back-height: calc(92vh + 0.4 * var(--gap));
+  }
+
+  /* ---- News: Kriszti bigger, partly off the right edge; the title in the
+     middle of the room left of her, three photos above it, two below. ---- */
+  .has-scene .news-portrait {
+    right: calc(-20vh + 0.3 * var(--gap));
+    width: 75vh;
+  }
+
+  .has-scene .news {
+    --room: calc(100vw - 60vh);
+    /* The whole content moves this much right, off the left edge, towards
+       Kriszti (the title with it: --title-x is its share of the room). */
+    --news-left: 6vw;
+    --title-x: 0.6;
+    --title-y: 0.55;
+  }
+
+  .news-item--1 { left: calc(var(--news-left) + var(--room) * 0.02); top: 11%; width: calc(16 * var(--u)); z-index: 2; }
+  .news-item--2 { left: calc(var(--news-left) + var(--room) * 0.37); top: 8%;  width: calc(16 * var(--u)); z-index: 1; }
+  .news-item--5 { left: calc(var(--news-left) + var(--room) * 0.72); top: 12%; width: calc(15 * var(--u)); z-index: 3; }
+  .news-item--3 { left: calc(var(--news-left) + var(--room) * 0.1);  top: 66%; width: calc(15 * var(--u)); z-index: 3; }
+  .news-item--4 { left: calc(var(--news-left) + var(--room) * 0.62); top: 66%; width: calc(15 * var(--u)); z-index: 2; }
+
+  .news-label {
+    font-size: calc(2.6 * var(--u));
+  }
+
+  .news-item--1 .news-label { left: 20%; top: 96%; }
+  .news-item--2 .news-label { left: 22%; top: 96%; rotate: -4deg; }
+  .news-item--5 .news-label { left: 18%; top: 96%; }
+  .news-item--3 .news-label { left: 96%; top: 30%; }
+  .news-item--4 .news-label { left: 105%; top: 40%; }
+
+  .news-picto--smiley {
+    left: calc(var(--news-left) + var(--room) * 0.42);
+    top: 84%;
+  }
+
+  .news-picto--bandaid {
+    left: calc(var(--news-left) + 1%);
+    top: 50%;
+  }
+
+  /* ---- Contact: like the hero — the right edge steps out, Kriszti and the
+     text lead, the stickers fill the left edge. ---- */
+  .has-scene .contact-stack {
+    right: calc(var(--k-right) - 2vh);
+    bottom: -14%;
+    width: calc(var(--k-width) + 3vh);
+  }
+
+  /* The texts a size up on narrower windows, to fill the room. */
+  .has-scene .contact-info {
+    --u: calc(min(0.97vw, 1.293vh) - 0.006 * var(--gap));
+  }
+
+  .contact-socials .social-btn {
+    height: calc(6 * var(--u) - 0.03 * var(--gap));
+  }
+
+  /* A little more air between the lines of the contact text. */
+  .has-scene .contact-info {
+    top: calc(var(--intro-top) + 15 * var(--u));
+  }
+
+  .contact-where {
+    margin-bottom: calc(5 * var(--u));
+  }
+
+  .contact-socials {
+    margin-top: calc(4 * var(--u));
+  }
+
+  .contact-sticker--2  { left: -12vh; top: 3%;  width: 30vh; }
+  .contact-sticker--8  { left: calc(-6vh + 0.3 * var(--gap));  top: 30%; width: 34vh; }
+  .contact-sticker--4  { left: calc(-11vh + 0.2 * var(--gap)); bottom: -5vh; width: 38vh; }
+
+  /* The right edge's two, mostly over it; on narrower windows they move
+     up into the room Kriszti leaves. Behind her. */
+  .contact-sticker--9  { right: calc(-24vh + 0.3 * var(--spare) - 0.1 * var(--gap)); top: 3%; width: 40vh; z-index: 2; }
+  .contact-sticker--11 { right: calc(-22vh + 0.3 * var(--spare) - 0.1 * var(--gap)); bottom: calc(-20vh - 0.7 * var(--gap)); width: 40vh; z-index: 2; }
+
+  .contact-picto--crown {
+    left: calc(25vh + 0.3 * var(--gap));
+    top: 84%;
+  }
+
+  .contact-picto--cat {
+    right: calc(58vh + 0.3 * var(--gap));
+    top: 12%;
+  }
+}
+
+
+.act-subs {
+  display: none;
+}
+
+/* =====================================================================
+   Mobile menu (src/mobile-menu.js) — shown only in the portrait view.
+   Sized in --mu: 1% of the width, but on squat portrait screens it
+   follows the height instead, so the whole menu still fits.
+   ===================================================================== */
+.menu-toggle,
+.mobile-menu {
+  display: none;
+}
+
+.mobile-menu {
+  --mu: min(1vw, 0.55dvh);
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  /* Head, the items in the middle of the height left, the address. */
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-columns: 100%;
+  justify-items: center;
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+
+/* The paper sheet behind it all (it comes down with the head). */
+.mm-sheet {
+  grid-row: 1 / -1;
+  grid-column: 1;
+  justify-self: stretch;
+  align-self: stretch;
+}
+
+.mm-sheet img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mm-head {
+  grid-row: 1;
+  grid-column: 1;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(2 * var(--mu));
+  padding-top: calc(5 * var(--mu));
+}
+
+.mm-logo img {
+  /* On the narrowest screens it gives a little way to "Budapest". */
+  width: min(64 * var(--mu), 59vw);
+  height: auto;
+}
+
+.mm-socials {
+  display: flex;
+  align-items: center;
+  gap: calc(6 * var(--mu));
+}
+
+.mm-socials .social-btn {
+  height: calc(20 * var(--mu));
+}
+
+/* Two columns, three rows, the papers overlapping a little. Each item's
+   picture and label share its tilt (--tilt), which stays off the item
+   itself: the opening animation turns the item. */
+/* The top padding is the arrow's room, so the items and the arrow are
+   centred together. */
+.mm-nav {
+  grid-row: 2;
+  grid-column: 1;
+  align-self: center;
+  z-index: 1;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, calc(46 * var(--mu)));
+  column-gap: calc(3 * var(--mu));
+  row-gap: calc(-2 * var(--mu));
+  padding-bottom: calc(5 * var(--mu));
+}
+
+.mm-item {
+  position: relative;
+  display: block;
+  color: var(--ink);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mm-item-bg {
+  width: 100%;
+  height: auto;
+  rotate: var(--tilt, 0deg);
+  filter: drop-shadow(calc(0.4 * var(--mu)) calc(0.8 * var(--mu)) calc(1 * var(--mu)) rgb(0 0 0 / 0.3));
+}
+
+.mm-label {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  translate: -50% -50%;
+  rotate: var(--tilt, 0deg);
+  font-family: var(--font-hand);
+  font-size: calc(7.4 * var(--mu));
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.mm-item--3 .mm-label {
+  top: 40%;
+}
+
+/* The pink swipe under the labels on the paper-coloured items. */
+.mm-underline {
+  position: absolute;
+  left: -6%;
+  top: 0.62em;
+  width: 112%;
+  max-width: none;
+  rotate: 4deg;
+  pointer-events: none;
+}
+
+.mm-item--1 { --tilt: -3deg; margin-top: calc(3 * var(--mu)); }
+.mm-item--2 { --tilt: 2deg; }
+.mm-item--3 { --tilt: 2deg; }
+.mm-item--4 { --tilt: -2deg; margin-top: calc(2 * var(--mu)); }
+.mm-item--5 { --tilt: -3deg; }
+.mm-item--6 { --tilt: 3deg; margin-top: calc(2 * var(--mu)); }
+
+.mm-item:active .mm-label,
+.mm-item:focus-visible .mm-label {
+  color: var(--pink);
+}
+
+.mm-item--1:active .mm-label,
+.mm-item--4:active .mm-label,
+.mm-item--1:focus-visible .mm-label,
+.mm-item--4:focus-visible .mm-label {
+  color: #fff;
+}
+
+/* The arrow above "Hello", pointing down at it (arrow.webp points
+   down-left, so it's mirrored). The span is what trembles. */
+.mm-arrow {
+  position: absolute;
+  left: calc(1 * var(--mu));
+  top: calc(-4 * var(--mu));
+  width: calc(11 * var(--mu));
+  pointer-events: none;
+}
+
+.mm-arrow img {
+  width: 100%;
+  transform: scaleX(-1) rotate(-12deg);
+}
+
+/* The address, copied on click like the contact's (the same classes,
+   sized here in --mu), with "katt a másoláshoz" and its arrow above it. */
+.mm-foot {
+  grid-row: 3;
+  grid-column: 1;
+  z-index: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: calc(8 * var(--mu));
+}
+
+.mm-hint {
+  margin: 0 0 calc(2.4 * var(--mu)) calc(30 * var(--mu));
+  gap: calc(0.6 * var(--mu));
+  font-size: calc(4.4 * var(--mu));
+  pointer-events: none;
+}
+
+.mm-hint .contact-arrow {
+  width: calc(7 * var(--mu));
+  margin-bottom: calc(0.4 * var(--mu));
+}
+
+.mm-hint .contact-hint-text {
+  margin-bottom: calc(1.4 * var(--mu));
+}
+
+.mm-mail {
+  padding: calc(2.2 * var(--mu)) calc(4 * var(--mu));
+  border-width: calc(0.6 * var(--mu));
+  box-shadow: calc(1.2 * var(--mu)) calc(1.2 * var(--mu)) 0 var(--pink);
+  font-size: calc(4.4 * var(--mu));
+  white-space: nowrap;
+  rotate: -2deg;
+}
+
+.mm-mail:hover,
+.mm-mail:focus-visible {
+  translate: calc(0.6 * var(--mu)) calc(0.6 * var(--mu));
+  box-shadow: calc(0.6 * var(--mu)) calc(0.6 * var(--mu)) 0 var(--pink);
+}
+
+.mm-mail:active {
+  translate: calc(1.2 * var(--mu)) calc(1.2 * var(--mu));
+  box-shadow: 0 0 0 var(--pink);
+}
+
+.mm-picto {
+  position: absolute;
+  left: calc(2 * var(--mu));
+  bottom: calc(20 * var(--mu));
+  width: calc(15 * var(--mu));
+  rotate: -8deg;
+}
+
+/* Where she works, in the top-left corner beside the logo: the painted pin
+   and "Budapest" in the items' hand, turned. */
+.mm-place {
+  /* The room between the left edge and the logo (64mu wide, centred); the
+     pin and its text keep their size (--pw: their width) while it fits and
+     shrink on narrower screens (the logo a little too), so they never reach
+     the logo. */
+  --room: calc(50vw - min(32 * var(--mu), 29.5vw));
+  --pw: min(19 * var(--mu), var(--room) - 3vw);
+  position: absolute;
+    left: min(10 * var(--mu), var(--room) - var(--pw) - 1.5vw);
+    top: calc(5 * var(--mu));
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    width: var(--pw);
+    font-family: var(--font-hand);
+    font-size: calc(var(--pw) * 5.5 / 19);
+    line-height: 1;
+    text-transform: uppercase;
+    color: var(--ink);
+}
+
+.mm-place img {
+  width: calc(var(--pw) * 15 / 19);
+  height: auto;
+  rotate: -8deg;
+}
+
+.mm-place span {
+  rotate: -12deg;
+}
+
+/* The other language: right under the items (a row of their grid, in the
+   middle), in the items' hand with a pink swipe under it. */
+.mm-lang {
+  grid-column: 1 / -1;
+  justify-self: center;
+  margin-top: calc(8 * var(--mu));
+  padding: calc(1.2 * var(--mu)) calc(3 * var(--mu)) calc(3.4 * var(--mu));
+  /* (The swipe flattened into the room under the letters.) */
+  background: url('/img/alahuzas.webp') center 100% / 100% calc(5 * var(--mu)) no-repeat;
+  font-family: var(--font-hand);
+  font-size: calc(6.4 * var(--mu));
+  line-height: 1;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  color: var(--ink);
+  rotate: -3deg;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* The torn black corner with the ✕ on it. */
+.mm-corner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  width: calc(64 * var(--mu));
+  pointer-events: none;
+}
+
+.mm-corner-bg {
+  width: 100%;
+  height: auto;
+}
+
+.mm-close {
+  position: absolute;
+  right: calc(3 * var(--mu));
+  top: calc(3 * var(--mu));
+  width: calc(14 * var(--mu));
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.mm-close img {
+  width: 100%;
+  height: auto;
+}
+
+/* =====================================================================
+   Portrait view: windows narrower than 0.85:1 — phones, and any upright
+   screen, whatever its resolution. Sized mostly in vw (the width is what's
+   short); designed on a 9:19.5 phone (390 × 844). Heights are in dvh: the
+   frame is the screen as it was when the page was laid out — written as
+   var(--vh), 1% of that height, which src/motion.js sets (1dvh until then):
+   a live dvh would re-flow the scene every time a phone's address bar
+   slides. The scroll scene takes other paths here too (src/hero-scroll.js `portrait()`): the folder stays
+   docked at the bottom, the pictures rise out of it.
+   ===================================================================== */
+@media (max-aspect-ratio: 85/100) {
+  :root {
+    --gap: 0px;
+    --u: min(2vw, calc(1.1 * var(--vh, 1dvh)));
+    /* The headline block, centred: its widest line ("Álmodozz!") is
+       about 40u wide. */
+    --intro-left: calc(50vw - 20 * var(--u));
+    --intro-top: calc(23 * var(--vh, 1dvh));
+    /* Where the later acts' title block (top left, under the logo) ends,
+       its line underneath included; and the height left under it down to
+       the folder's mouth. The designs are placed in that room. */
+    --bt: calc(2vw + min(29vw, calc(15 * var(--vh, 1dvh))) + 20 * var(--u));
+    --area: calc(calc(92 * var(--vh, 1dvh)) - var(--bt));
+    /* "Ne parázz!" turned up the left edge: its middle, as a share of the
+       height (src/backpiece.js). */
+    --neparazz-y: 0.4;
+  }
+
+  /* ---- Header: only the logo (bigger, in the middle) and the menu
+     button; the menu and the socials live in the mobile menu. ---- */
+  /* The side padding is where the later acts' titles start
+     (src/hero-scroll.js titleSpot); --title-gap their gap under the logo,
+     in em. */
+  .site-header {
+    --title-gap: 0.4;
+    justify-content: center;
+    padding: 2vw 6vw 0;
+  }
+
+  .hero {
+    height: calc(100 * var(--vh, 1dvh));
+  }
+
+  /* The background covers the tallest the screen gets (bars hidden). */
+  .backdrop {
+    height: 100lvh;
+  }
+
+  .nav,
+  .socials {
+    display: none;
+  }
+
+  .logo {
+    margin: 0;
+  }
+
+  .preloading .preloader {
+    --pl-logo: min(84vw, calc(42 * var(--vh, 1dvh)));
+  }
+
+  .logo img {
+    width: min(58vw, calc(30 * var(--vh, 1dvh)));
+  }
+
+  .decor-paper {
+    width: min(74vw, calc(38 * var(--vh, 1dvh)));
+    left: calc(50vw - min(37vw, calc(19 * var(--vh, 1dvh))));
+    top: calc(-1 * min(16vw, calc(8 * var(--vh, 1dvh))));
+  }
+
+  .menu-toggle {
+    display: block;
+    position: absolute;
+    right: 2vw;
+    top: 2.5vw;
+    width: min(17vw, calc(9 * var(--vh, 1dvh)));
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    pointer-events: auto;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .menu-toggle img {
+    width: 100%;
+    height: auto;
+  }
+
+  .mobile-menu:not([hidden]) {
+    display: grid;
+  }
+
+  /* ---- Hero ---- */
+  .hero {
+    /* Kriszti's width. */
+    --kw: min(98vw, calc(44 * var(--vh, 1dvh)));
+  }
+
+  /* Each picture's width (--w) is bounded by the height as well, and how
+     far it hangs over the edge is a share of it. */
+  .decor-smiley {
+    left: 2vw;
+    right: auto;
+    top: calc(1.5 * var(--vh, 1dvh));
+    width: min(14vw, calc(7 * var(--vh, 1dvh)));
+  }
+
+  .decor-bird {
+    --w: min(52vw, calc(35 * var(--vh, 1dvh)));
+        width: var(--w);
+        left: calc(-0.52 * var(--w));
+        top: calc(12 * var(--vh, 1dvh));
+  }
+
+  .decor-plague {
+    --w: min(48vw, calc(38 * var(--vh, 1dvh)));
+        width: var(--w);
+        left: calc(-0.31 * var(--w));
+        top: calc(52 * var(--vh, 1dvh));
+  }
+
+  .decor-strawberry,
+  .hero-tape {
+    display: none;
+  }
+
+  /* The page's h1: its text shows on the paper at the bottom left here
+     (.act-sub), so the heading itself is kept off screen, not removed. */
+  .hero-subtitle {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .decor-cat {
+    width: min(12vw, calc(8 * var(--vh, 1dvh)));
+    left: 8vw;
+    top: calc(20 * var(--vh, 1dvh));
+  }
+
+  /* "Fájni fog." under the smiley, top left (placed from the headline
+     block's corner, which it belongs to). */
+  .hero-hurts {
+    left: calc(5vw - var(--intro-left));
+    top: calc(calc(11 * var(--vh, 1dvh)) - var(--intro-top));
+    font-size: min(6vw, calc(4 * var(--vh, 1dvh)));
+    transform: rotate(-14deg);
+  }
+
+  /* Kriszti in the middle at the bottom, cut by the bottom edge. */
+  .portrait-stack,
+  .portrait-notes {
+    right: auto;
+        left: calc(40vw - var(--kw) / 2);
+        bottom: calc(-15 * var(--vh, 1dvh));
+        width: calc(1.2 * var(--kw));
+  }
+
+  .tag--here {
+    left: 80%;
+    top: 22%;
+    font-size: 9cqw;
+  }
+
+  .tag-arrow {
+    left: 75%;
+    top: 35%;
+    width: 15cqw;
+    transform: rotate(32deg);
+  }
+
+  /* The right column: the woman up top, SLIDE lower down, both well over
+     the edge. */
+  .hero-side {
+    right: 0;
+    width: 34vw;
+  }
+
+  .decor-portrait2 {
+    --w: min(42vw, calc(28 * var(--vh, 1dvh)));
+    display: block;
+    left: calc(34vw - 0.69 * var(--w));
+    top: calc(13 * var(--vh, 1dvh));
+    width: var(--w);
+  }
+
+  .decor-slide {
+    --w: min(33vw, calc(25 * var(--vh, 1dvh)));
+        display: block;
+        left: calc(36vw - 0.81 * var(--w));
+        top: calc(46 * var(--vh, 1dvh));
+        width: var(--w);
+  }
+  .hero-title {
+    font-size: calc(7.4 * var(--u));
+  }
+
+  .hero-title .accent {
+    font-size: 0.62em;
+    margin-left: 8vw;
+  }
+
+  /* Later acts' titles (top left under the header): the lines under them a
+     size up. */
+  /* The subtitles move to the bottom-left corner (.act-sub below). */
+  .hero-title .title-sub,
+  .has-scene .designs-caption {
+    display: none;
+  }
+
+  /* ===== The acts' subtitles — EDIT HERE =====
+     Bottom left, on the act's menu paper (stretched to the text). Over the
+     folder. */
+  .act-subs {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 45;
+    pointer-events: none;
+  }
+
+  .act-sub {
+    position: absolute;
+    left: -5vw;
+    bottom: calc(0 * var(--vh, 1dvh));
+    /* The papers' clean middle is only about half their height and two
+       thirds of their width: the text stays on it. */
+    padding: 3em 4.4em 3.3em 4.8em;
+        background: center / 100% 100% no-repeat;
+        font-family: var(--font-mono);
+        font-weight: 700;
+        font-size: min(3.4vw, calc(1.95 * var(--vh, 1dvh)));
+        line-height: 1.25;
+        white-space: nowrap;
+        color: var(--ink);
+    rotate: -3deg;
+    visibility: hidden;
+    filter: drop-shadow(0.4vw 0.8vw 1vw rgb(0 0 0 / 0.3));
+    /* A soft light halo round the letters: they read on the pink papers and
+       the busy ones too. */
+    text-shadow:
+      0 0 0.12em rgb(255 255 255 / 0.95),
+      0 0 0.45em rgb(255 255 255 / 0.75);
+  }
+
+  /* (The 400 px copies: the papers are about half the screen wide here, and
+     it is the size the menu's own items take on most phones, so each paper
+     is downloaded once.) */
+  .act-sub--1 { background-image: url('/img/r/400/mobilemenu/sm/menu-item-1.webp'); }
+  .act-sub--2 { background-image: url('/img/r/400/mobilemenu/sm/menu-item-2.webp'); }
+  .act-sub--3,
+  .act-sub--3b { background-image: url('/img/r/400/mobilemenu/sm/menu-item-3.webp'); }
+  .act-sub--4 { background-image: url('/img/r/400/mobilemenu/sm/menu-item-4.webp'); }
+  .act-sub--5 { background-image: url('/img/r/400/mobilemenu/sm/menu-item-5.webp'); }
+
+  /* "Mikor jössz?" (and its other texts) smaller, to fit the width, and
+     moved in towards the middle. */
+  .hero-title .title-cycle {
+    font-size: 0.64em;
+    margin-left: 0.9em;
+  }
+
+  /* ---- The folder: wider than the frame, docked at the bottom
+     (src/hero-scroll.js). ---- */
+  .folder {
+    left: 0vw;
+    width: 110vw;
+  }
+
+  /* ---- Works: two columns rising out of the folder; the strip and the
+     note wait inside it, below its mouth. ---- */
+  .work {
+    --card: min(42vw, calc(26 * var(--vh, 1dvh)));
+    width: var(--card);
+  }
+
+  /* Centred (the second column is 1.1 cards right of the first). Parked
+     low enough to stay hidden under the folder even when it sinks lower for
+     the designs and the back. */
+  .has-scene .works-strip {
+    left: calc(50vw - 1.05 * min(42vw, calc(26 * var(--vh, 1dvh))));
+    top: calc(calc(100 * var(--vh, 1dvh)) + 2vw);
+  }
+
+  .works-note,
+  .paintings-note {
+    --note-width: min(54vw, calc(29 * var(--vh, 1dvh)));
+  }
+
+  .has-scene .works-note,
+  .has-scene .paintings-note {
+    left: calc(101vw - var(--note-width));
+    top: calc(calc(100 * var(--vh, 1dvh)) + 2vw);
+  }
+
+  .works-picto--bandaid {
+    left: 3vw;
+    top: calc(42 * var(--vh, 1dvh));
+    width: 22vw;
+  }
+
+  .works-picto--heart {
+    left: 74vw;
+    top: calc(30 * var(--vh, 1dvh));
+    width: 16vw;
+  }
+
+  /* ===== Designs layout (portrait) — EDIT HERE =====
+     One composition, laid out on a 625 × 840 screen and scaled as a whole:
+     every number is a pixel of that screen, times --ds (one such pixel on
+     this screen, by the width or the height, whichever is shorter). left is
+     measured from the middle of the width, top from where the title block
+     ends (--bt, 323 on that screen). On taller screens the room left over
+     (--dspare) is shared out down the composition: each piece takes the
+     share written before it (0 at the top … 1 at the bottom). */
+  .designs {
+    --ds: min(0.16vw, calc(0.11905 * var(--vh, 1dvh)));
+    --dspare: max(0px, calc(100 * var(--vh, 1dvh) - var(--bt) - 466 * var(--ds) - 6 * var(--vh, 1dvh)));
+  }
+
+  .design--9             { left: calc(50vw + 56.5 * var(--ds)); top: calc(var(--bt) - 157 * var(--ds) + 0.00 * var(--dspare)); width: calc(206 * var(--ds)); }
+  .design--4             { left: calc(50vw - 49.5 * var(--ds)); top: calc(var(--bt) - 54 * var(--ds) + 0.17 * var(--dspare)); width: calc(138 * var(--ds)); }
+  .design--2             { left: calc(50vw - 293.5 * var(--ds)); top: calc(var(--bt) - 36 * var(--ds) + 0.08 * var(--dspare)); width: calc(148 * var(--ds)); }
+  .design--8             { left: calc(50vw - 137.5 * var(--ds)); top: calc(var(--bt) - 22 * var(--ds) + 0.05 * var(--dspare)); width: calc(90 * var(--ds)); }
+  .design--5             { left: calc(50vw - 143.5 * var(--ds)); top: calc(var(--bt) + 88 * var(--ds) + 0.44 * var(--dspare)); width: calc(126 * var(--ds)); }
+  .design--6             { left: calc(50vw - 281.5 * var(--ds)); top: calc(var(--bt) + 117 * var(--ds) + 0.55 * var(--dspare)); width: calc(126 * var(--ds)); }
+  .design--3             { left: calc(50vw + 106.5 * var(--ds)); top: calc(var(--bt) + 131 * var(--ds) + 0.41 * var(--dspare)); width: calc(99 * var(--ds)); }
+  .design--7             { left: calc(50vw + 125.5 * var(--ds)); top: calc(var(--bt) + 248 * var(--ds) + 0.70 * var(--dspare)); width: calc(148 * var(--ds)); }
+  .design--1             { left: calc(50vw - 87.5 * var(--ds)); top: calc(var(--bt) + 346 * var(--ds) + 0.86 * var(--dspare)); width: calc(65 * var(--ds)); }
+  .designs-machine       { left: calc(50vw + 175.5 * var(--ds)); top: calc(var(--bt) + 378 * var(--ds) + 0.91 * var(--dspare)); width: calc(58 * var(--ds)); }
+  .designs-picto--smiley { left: calc(50vw - 187.5 * var(--ds)); top: calc(var(--bt) - 88 * var(--ds) + 0.00 * var(--dspare)); width: calc(50 * var(--ds)); }
+  .designs-picto--cat    { left: calc(50vw + 187.5 * var(--ds)); top: calc(var(--bt) - 81 * var(--ds) + 0.00 * var(--dspare)); width: calc(94 * var(--ds)); }
+
+  /* "Kattints, válassz, varrjuk!" under tervezes-5. */
+  .design-note {
+    left: 5%;
+    top: 101%;
+    bottom: auto;
+    font-size: calc(37.5 * var(--ds));
+  }
+
+  /* ---- The back: as tall as fits, the texts bigger over it. ---- */
+  /* The man higher up, his waist just inside the lowered folder's mouth
+     (6.4vw above the bottom), so more of the tattoo shows. */
+  .has-scene .backpiece {
+    --back-height: min(calc(80 * var(--vh, 1dvh)), 130vw);
+    bottom: 3vw;
+  }
+
+  /* Under "Ne parázz!" (the title line ends about 15u under the logo). */
+  .has-scene .designs-caption {
+    left: 7vw;
+    top: calc(2vw + min(29vw, calc(15 * var(--vh, 1dvh))) + 15 * var(--u));
+    font-size: min(4.1vw, calc(2.1 * var(--vh, 1dvh)));
+  }
+
+  .cat-bubble {
+    --bubble: min(54vw, calc(22 * var(--vh, 1dvh)));
+  }
+
+  .cat-bubble-text {
+    font-size: min(5vw, calc(2.2 * var(--vh, 1dvh)));
+  }
+
+  /* ---- Paintings: two columns (drawings, paintings) rising like the
+     works. ---- */
+  .has-scene .paintings-strip {
+    flex-direction: row;
+    align-items: flex-start;
+    left: calc(50vw - min(44vw, calc(27 * var(--vh, 1dvh))) - 2vw);
+    top: calc(calc(100 * var(--vh, 1dvh)) + 2vw);
+    gap: 4vw;
+  }
+
+  .has-scene .paintings-row {
+    flex-direction: column;
+    align-items: center;
+    width: min(44vw, calc(27 * var(--vh, 1dvh)));
+    gap: 7vw;
+  }
+
+  /* The drawings' column is the longer one (the pictures are taller), so
+     the paintings' starts lower — but ends a little before it, so the two
+     don't finish on one line. */
+  .has-scene .paintings-row:first-child {
+    padding-left: 0;
+    padding-top: 0;
+  }
+
+  .has-scene .paintings-row:last-child {
+    padding-top: calc(1.05 * min(44vw, calc(27 * var(--vh, 1dvh))));
+  }
+
+  /* Every picture as wide as its column; the height follows its shape. */
+  .has-scene .painting {
+    width: 100%;
+    height: auto;
+  }
+
+  .has-scene .painting-face,
+  .has-scene .painting-face > img:first-child {
+    width: 100%;
+    height: auto;
+  }
+
+  .painting-pin {
+    top: -2.2vw;
+    width: 6vw;
+  }
+
+  .paintings-picto--crown {
+    left: 66vw;
+    top: calc(16 * var(--vh, 1dvh));
+    width: 16vw;
+  }
+
+  .paintings-picto--heart {
+    left: 4vw;
+    top: calc(52 * var(--vh, 1dvh));
+    width: 14vw;
+  }
+
+  /* ---- The hand takes the docked folder off to the right. ---- */
+  /* Turned (src/news.js), fingers up, parked below the frame (its turned box reaches
+     0.2 of its width above its layout box); src/news.js brings it up. */
+  .folder-hand {
+    --hw: min(84vw, calc(46 * var(--vh, 1dvh)));
+    left: calc(58vw - var(--hw) / 2);
+    top: calc(calc(100 * var(--vh, 1dvh)) + 0.25 * var(--hw));
+    width: var(--hw);
+  }
+
+  /* ---- News: Kriszti at the bottom right, the title in the middle, the
+     photos around it (--title-x / --title-y: its middle, as shares of the
+     width and the height). ===== EDIT HERE ===== */
+  .has-scene .news {
+    --room: 100vw;
+    --title-x: 0.5;
+    --title-y: 0.47;
+  }
+
+  /* No Kriszti here on phones (her contact pictures just stick on later). */
+  .has-scene .news-portrait {
+    display: none;
+  }
+
+  .news-item--1 { left: 2vw;  top: 10%; width: min(36vw, calc(24 * var(--vh, 1dvh))); z-index: 2; }
+  .news-item--2 { left: 63vw; top: 12%; width: min(34vw, calc(22 * var(--vh, 1dvh))); z-index: 1; }
+  .news-item--3 { left: 4vw;  top: 51%; width: min(34vw, calc(20 * var(--vh, 1dvh))); z-index: 3; }
+  .news-item--4 { left: 36vw; top: 54%; width: min(30vw, calc(18 * var(--vh, 1dvh))); z-index: 2; }
+  .news-item--5 { left: 55vw;  top: 70%; width: min(32vw, calc(22 * var(--vh, 1dvh))); z-index: 3; }
+
+  .news-label {
+    font-size: min(5vw, calc(2.8 * var(--vh, 1dvh)));
+  }
+
+  .news-item--1 .news-label { left: 15%; top: 98%; rotate: -4deg; }
+  .news-item--2 .news-label { left: 50%; top: 96%; rotate: 3deg; }
+  .news-item--3 .news-label { left: 15%; top: 103%; rotate: -3deg; }
+  .news-item--4 .news-label { left: 110%; top: 42%; rotate: 4deg; }
+  .news-item--5 .news-label { left: 90%; top: 40%; rotate: 80deg; }
+
+  .news-picto--smiley {
+    left: 45vw;
+    top: 88%;
+    width: 12vw;
+  }
+
+  .news-picto--bandaid {
+    left: 33vw;
+    top: 25%;
+    width: 18vw;
+  }
+
+  /* ===== Contact layout (portrait) — EDIT HERE =====
+     The cycling title turned almost upright left of Kriszti (its middle as
+     shares of the width / height, and its turn; src/contact.js), Kriszti a
+     little to the right, the address and the socials up under the logo. */
+  .stage {
+    --contact-title-x: 0.24;
+    --contact-title-y: 0.63;
+    --contact-title-turn: -80;
+    --contact-info-top: calc(20 * var(--vh, 1dvh));
+    --contact-tira-width: min(100vw, calc(54 * var(--vh, 1dvh)));
+    --contact-tira-left: calc(42vw - var(--contact-tira-width) / 2 + 16vw);
+    --contact-tira-bottom: -12%;
+    --contact-crown-left: 5vw;
+    --contact-crown-top: calc(38 * var(--vh, 1dvh));
+    --contact-crown-width: 11vw;
+    --contact-cat-right: 5vw;
+    --contact-cat-top: calc(51 * var(--vh, 1dvh));
+    --contact-cat-width: 11vw;
+  }
+
+  .has-scene .contact-stack {
+    right: auto;
+    left: var(--contact-tira-left);
+    bottom: var(--contact-tira-bottom);
+    width: var(--contact-tira-width);
+  }
+
+  .has-scene .contact-info {
+    left: 0;
+    top: var(--contact-info-top);
+    width: 100vw;
+    align-items: center;
+    text-align: center;
+  }
+
+  .has-scene .contact-where {
+    display: none;
+  }
+
+  /* Sized by the width too, so the address never spans the whole of a
+     narrow screen (about 70% of it). */
+  .contact-hint {
+    margin-left: calc(8 * var(--u));
+        font-size: min(2.5 * var(--u), 3.9vw);
+  }
+
+  .contact-mail {
+    font-size: min(2.6 * var(--u), 4.1vw);
+  }
+
+  .contact-socials .social-btn {
+    height: min(7 * var(--u), 11vw);
+  }
+
+  /* The copyright on a torn paper (socials-bg) in the bottom-right corner,
+     over her; the paper runs over the edges. */
+  .has-scene .contact-copyright {
+    left: auto;
+        right: -14vw;
+        width: auto;
+        margin: 0;
+        bottom: calc(-5 * var(--vh, 1dvh));
+        z-index: 8;
+        padding: 8vw 20vw 12vw 20vw;
+        background: url(/img/socials-bg.webp) center / 100% 100% no-repeat;
+        font-size: 2.5vw;
+        font-weight: 700;
+        line-height: 1.3;
+        text-align: left;
+        filter: drop-shadow(0.4vw 0.8vw 1vw rgb(0 0 0 / 0.3));
+        text-shadow: 0 0 0.12em rgb(255 255 255 / 0.95), 0 0 0.45em rgb(255 255 255 / 0.75);
+        opacity: 1;
+  }
+
+  /* The stickers beside Kriszti, below the texts (one steps out). */
+  .contact-sticker--2  { left: -12vw; top: calc(24 * var(--vh, 1dvh)); width: 33vw; }
+  .contact-sticker--4  { left: -10vw; bottom: calc(-4 * var(--vh, 1dvh)); width: 38vw; }
+  .contact-sticker--9  { right: -7vw; top: calc(8 * var(--vh, 1dvh)); width: 33vw; }
+  .contact-sticker--11 { right: -14vw; bottom: calc(-9 * var(--vh, 1dvh)); width: 36vw; }
+
+  .has-scene .contact-sticker--8 {
+    display: none;
+  }
+
+  .contact-picto--crown {
+    left: var(--contact-crown-left);
+    top: var(--contact-crown-top);
+    width: var(--contact-crown-width);
+  }
+
+  .contact-picto--cat {
+    right: var(--contact-cat-right);
+    top: var(--contact-cat-top);
+    width: var(--contact-cat-width);
+  }
+
+  .contact-picto-note {
+    font-size: 5vw;
+        right: 8%;
+        top: 110%;
+  }
+
+  .end-bubble {
+    --bubble: 40vw;
+        left: calc(55% - 0.09 * var(--bubble));
+  }
+
+  .end-bubble-text {
+    font-size: 4.1vw;
+  }
+
+  /* ---- News gallery: one column — the picture, its thumbnails, the story
+     on its paper under them. ---- */
+  .gallery {
+    --gallery-size: min(84vw, calc(44 * var(--vh, 1dvh)));
+  }
+
+  .gallery-box {
+    grid-template-columns: var(--gallery-size);
+    grid-template-rows: auto auto auto;
+    row-gap: 2.0vw;
+  }
+
+  .gallery-side {
+    grid-column: 1;
+    grid-row: 3;
+    justify-self: center;
+    width: calc(var(--gallery-size) * 1.06);
+    height: min(calc(42 * var(--vh, 1dvh)), 72vw);
+    padding: 10% 11% 13% 20%;
+    /* (The paper's smaller copy: it is under 90vw wide here.) */
+    background-image: url('/img/r/640/gallery-bg.webp');
+  }
+
+  .gallery-title {
+    margin-bottom: 4vw;
+    font-size: min(6.5vw, calc(3.2 * var(--vh, 1dvh)));
+  }
+
+  .gallery-text {
+    font-size: min(3.5vw, calc(1.8 * var(--vh, 1dvh)));
+  }
+
+  .gallery-count {
+    font-size: min(2.6vw, calc(1.3 * var(--vh, 1dvh)));
+  }
+
+  .gallery-nav {
+    width: min(10vw, calc(5 * var(--vh, 1dvh)));
+  }
+
+  .gallery-close {
+    top: -3vw;
+    right: -2vw;
+    width: min(10vw, calc(5 * var(--vh, 1dvh)));
+    font-size: min(7vw, calc(3.5 * var(--vh, 1dvh)));
+  }
+}
+
+/* =====================================================================
+   Narrow compact: windows between 0.85:1 and 1.2:1 (e.g. 767 × 879). Only
+   the news differ: Kriszti smaller, so the whole width above her head is
+   free — three photos across it, the title in the middle left of her, two
+   photos under it. ===== EDIT HERE =====
+   ===================================================================== */
+@media (max-aspect-ratio: 120/100) and (min-aspect-ratio: 85/100) {
+  .has-scene .news-portrait {
+    right: -8vw;
+    width: min(55vw, 55vh);
+  }
+
+  .has-scene .news {
+    --title-x: 0.5;
+    --title-y: 0.5;
+  }
+
+  .news-item--1 { left: 3vw;  top: 9%;  width: min(21 * var(--u), 17.0vh); }
+  .news-item--2 { left: 37vw; top: 12%; width: min(20 * var(--u), 16.2vh); }
+  .news-item--5 { left: 71vw; top: 7%;  width: min(20 * var(--u), 16.2vh); }
+  .news-item--3 { left: 3vw;  top: 63%; width: min(20 * var(--u), 16.2vh); }
+  .news-item--4 { left: 28vw; top: 66%; width: min(20 * var(--u), 16.2vh); }
+
+  .news-item--3 .news-label { left: 18%; top: 97%; }
+  .news-item--4 .news-label { left: 18%; top: 97%; }
+
+  .news-picto--smiley {
+    left: 50vw;
+    top: 88%;
+  }
+
+  .news-picto--bandaid {
+    left: 55vw;
+    top: 29%;
+  }
+}
+
+/* =====================================================================
+   Tall phones: portrait windows narrower than 0.6:1 (e.g. 393 × 852).
+   Designed from the 500 × 703 look: the headline gets more air (a size
+   smaller, the stickers further out over the edges) and "Ő itt Tira." goes
+   up into the free space above Kriszti. Only what differs is set here.
+   ===================================================================== */
+@media (max-aspect-ratio: 60/100) {
+  :root {
+    /* The headline block, centred at its smaller size (below). */
+    --intro-left: calc(50vw - 27vw);
+  }
+
+  .hero-title {
+    font-size: 12.6vw;
+  }
+
+  .decor-bird {
+    left: calc(-0.68 * var(--w));
+    top: calc(9 * var(--vh, 1dvh));
+  }
+
+  .decor-portrait2 {
+    left: calc(34vw - 0.5 * var(--w));
+  }
+
+  /* Above her head on the right, pointing down at her (in % of her
+     picture, like the rest of the hero's). */
+  .tag--here {
+    left: 66%;
+    top: 0%;
+  }
+
+  .tag-arrow {
+    left: 65%;
+    top: 14%;
+    transform: rotate(6deg);
+  }
+
+  /* ---- Contact on tall phones: the stickers take the empty edges (the
+     skull up by the address, the fish woman down the right side), the cat
+     above Kriszti's head. ---- */
+  .stage {
+    --contact-title-x: 0.21;
+    --contact-title-y: 0.66;
+    --contact-crown-top: calc(44 * var(--vh, 1dvh));
+    --contact-cat-right: 55vw;
+    --contact-cat-top: calc(40 * var(--vh, 1dvh));
+    --contact-cat-width: 15vw;
+  }
+
+  .contact-sticker--2 { left: -11vw; top: calc(9 * var(--vh, 1dvh));  width: 34vw; }
+  .contact-sticker--9 { right: -11vw; top: calc(31 * var(--vh, 1dvh)); width: 37vw; }
+}
+
+
+/* (Longer than "Fájni fog.": smaller, and further from Kriszti's arm.) */
+html[lang='en'] .hero-hurts {
+  margin-left: calc(-7 * var(--u));
+  font-size: calc(2.7 * var(--u));
+}
+
+html[lang='en'] .works-note-text {
+  line-height: 1;
+}
+
+@media (max-aspect-ratio: 85/100) {
+  html[lang='en'] .hero-hurts {
+    margin-left: 0;
+    font-size: min(4.6vw, calc(3 * var(--vh, 1dvh)));
+  }
+
+  html[lang='en'] .act-sub {
+    left: -12vw;
+  }
+}

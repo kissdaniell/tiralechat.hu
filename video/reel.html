@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="hu">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tira Tattoo — reel 4:5</title>
+    <!--
+      A short social video made of the site's own pictures, fonts and
+      motions, played like stop motion (src: reel.js; render: render.mjs).
+      Open it through the dev server to watch it (npm run dev, then
+      http://localhost:5173/video/reel.html); render.mjs serves it itself.
+      The frame is 1080 × 1350 (4:5); everything in it is placed in % of the
+      frame (cqw / cqh), so another format only needs its numbers here.
+    -->
+    <style>
+      @font-face { font-family: 'Anton'; font-weight: 400; src: url('/font/anton-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+      @font-face { font-family: 'Anton'; font-weight: 400; src: url('/font/anton-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+      @font-face { font-family: 'Protest Revolution'; font-weight: 400; src: url('/font/protest-revolution-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+      @font-face { font-family: 'Protest Revolution'; font-weight: 400; src: url('/font/protest-revolution-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+      @font-face { font-family: 'Courier Prime'; font-weight: 400; src: url('/font/courier-prime-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+      @font-face { font-family: 'Courier Prime'; font-weight: 400; src: url('/font/courier-prime-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+      @font-face { font-family: 'Delicious Handrawn'; font-weight: 400; src: url('/font/delicious-handrawn-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+      @font-face { font-family: 'Delicious Handrawn'; font-weight: 400; src: url('/font/delicious-handrawn-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+      :root {
+        --pink: #fb0a8f;
+        --ink: #131313;
+        --paper: #e9e7e3;
+      }
+
+      html,
+      body {
+        margin: 0;
+        background: #111;
+      }
+
+      body {
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      /* ===== The frame — EDIT HERE (places and sizes, in % of the frame) ===== */
+      /* (In the middle of the window, scaled to fit it when watched in a
+         browser — reel.js; render.mjs makes the window exactly its size.) */
+      .frame {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        translate: -50% -50%;
+        width: 1080px;
+        height: 1350px;
+        overflow: hidden;
+        container-type: size;
+        background: var(--paper) url('/img/main-bg-mob.webp') 46% center / cover no-repeat;
+        flex: none;
+      }
+
+      /* Every piece is a wrapper the timeline moves. --lift raises its
+         shadow while it is in the air. Only the logo and the texts shake
+         from drawing to drawing (reel.js boil); the tattoo stickers now and
+         then turn a little, one at a time. */
+      .piece {
+        position: absolute;
+        visibility: hidden;
+        --lift: 0;
+        filter: saturate(var(--sat, 1)) contrast(var(--con, 1)) brightness(var(--bri, 1))
+          drop-shadow(calc(0.35cqw + var(--lift) * 1.6cqw) calc(0.5cqw + var(--lift) * 2.6cqw) calc(0.6cqw + var(--lift) * 2cqw) rgb(0 0 0 / 0.32));
+      }
+
+      .piece > img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      /* The header: torn paper and the logo, the crown's tip cut off by the
+         frame's top edge. */
+      .paper { left: 31cqw; top: -11.5cqw; width: 38cqw; rotate: 176deg; z-index: 50; }
+      .logo { left: 34.5cqw; top: -1.3cqh; width: 31cqw; z-index: 51; }
+
+      /* Kriszti (both stacks: hero and contact). */
+      .pose { left: 15cqw; top: 31cqh; width: 80cqw; z-index: 20; --sat: 1.06; --con: 1.04; }
+      .pose--contact { left: 13cqw; top: 33cqh; }
+
+      /* The hero's stickers (colours as on the site); they may overlap. */
+      .st-geisha { left: -10cqw; top: 40cqh; width: 41cqw; z-index: 12; --sat: 0.78; --con: 0.92; }
+      .st-bird { left: -10cqw; top: 69cqh; width: 40cqw; z-index: 13; --sat: 0.6; --con: 0.88; --bri: 1.03; }
+      .st-woman { right: -11cqw; top: 25cqh; width: 40cqw; z-index: 12; --sat: 0.8; --con: 0.9; }
+      .st-slide { right: -5cqw; top: 60cqh; width: 27cqw; z-index: 13; --sat: 0.62; --con: 0.9; }
+
+      /* The contact's stickers, clear of the title. */
+      .st-c2 { left: -7cqw; top: 44cqh; width: 30cqw; z-index: 12; }
+      .st-c8 { left: -11cqw; top: 66cqh; width: 36cqw; z-index: 13; }
+      .st-c9 { right: -10cqw; top: 27cqh; width: 35cqw; z-index: 12; }
+      .st-c11 { right: -11cqw; top: 62cqh; width: 38cqw; z-index: 13; }
+
+      /* Pictos: the hero's, the works' (scattered round the pile), the contact's. */
+      .pi-smiley { left: 6cqw; top: 2.5cqh; width: 10cqw; z-index: 52; }
+      .pi-heart { right: 7cqw; top: 3cqh; width: 9cqw; z-index: 52; }
+      .pi-cat { right: 7cqw; top: 18cqh; width: 13cqw; z-index: 35; }
+      .pi-bandaid { right: 6cqw; top: 15cqh; width: 17cqw; z-index: 45; }
+      .pi-wheart { left: 3cqw; top: 55cqh; width: 11cqw; z-index: 45; }
+      .pi-wcrown { right: 4cqw; top: 81cqh; width: 13cqw; z-index: 45; }
+      .pi-crown { left: 6cqw; top: 2.5cqh; width: 11cqw; z-index: 52; }
+      .pi-catc { right: 8cqw; top: 15cqh; width: 13cqw; z-index: 35; }
+      .pi-catc > span { display: block; position: relative; }
+      .pi-catc img { display: block; width: 100%; height: auto; }
+      .pi-catc .note { position: absolute; right: 104%; top: 22%; font: 6.2cqw/1 'Delicious Handrawn', cursive; color: var(--ink); white-space: nowrap; rotate: -8deg; }
+
+      /* The headlines: the site's (Anton, worn paint, each line turned -5°). */
+      .title {
+        position: absolute;
+        left: 7cqw;
+        top: 14.5cqh;
+        z-index: 40;
+        font: 400 10.6cqw/1.1 'Anton', sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--ink);
+      }
+
+      .title--contact {
+        top: 13.5cqh;
+        font-size: 12.6cqw;
+      }
+
+      .title .line {
+        display: block;
+        width: max-content;
+        transform: rotate(-5deg);
+        transform-origin: left center;
+      }
+
+      .title .ink {
+        display: inline-block;
+        filter: url(#grunge);
+      }
+
+      .title .ch {
+        display: inline-block;
+        visibility: hidden;
+        white-space: pre;
+      }
+
+      .title .ch > span {
+        display: inline-block;
+      }
+
+      /* "Varrjuk fel!": the brush line with its underline. */
+      .accent { left: 9cqw; top: 34cqh; z-index: 41; font: 400 7.9cqw/1 'Protest Revolution', cursive; color: var(--pink); white-space: nowrap; filter: none; rotate: -5deg; }
+      .accent > span { display: inline-block; position: relative; }
+      .accent img { position: absolute; left: 21%; top: 0.62em; width: 58%; rotate: 8deg; }
+
+      /* The pile of polaroids: all on one spot; reel.js scatters them a little. */
+      .card { left: 16cqw; top: 23cqh; width: 68cqw; z-index: 30; }
+      .card--news { left: 20cqw; top: 27cqh; width: 60cqw; }
+
+      /* The address: the site's black button with the pink frame, in the
+         middle of the width. */
+      .mail { left: 0; right: 0; top: 84cqh; z-index: 45; filter: none; display: flex; justify-content: center; }
+      .mail > span {
+        display: block;
+        padding: 1.6cqw 3cqw;
+        border: 0.45cqw solid var(--pink);
+        background: var(--ink);
+        box-shadow: 1.2cqw 1.2cqw 0 var(--pink);
+        font: 700 4.7cqw/1 'Courier Prime', monospace;
+        letter-spacing: 0.02em;
+        color: #fff;
+        white-space: nowrap;
+        rotate: -1.5deg;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="frame" id="frame">
+      <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+        <!-- The site's worn-paint filter (index.html). -->
+        <filter id="grunge" x="-2%" y="-2%" width="104%" height="104%" color-interpolation-filters="sRGB">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="2" result="edge" />
+          <feDisplacementMap in="SourceGraphic" in2="edge" scale="2" xChannelSelector="R" yChannelSelector="G" result="rough" />
+          <feTurbulence type="fractalNoise" baseFrequency="0.22 0.008" numOctaves="2" seed="13" result="streakNoise" />
+          <feColorMatrix in="streakNoise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  25 0 0 0 -15.5" result="streak" />
+          <feTurbulence type="fractalNoise" baseFrequency="0.025" numOctaves="2" seed="9" result="zoneNoise" />
+          <feColorMatrix in="zoneNoise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  5.88 0 0 0 -3.24" result="zone" />
+          <feComposite in="streak" in2="zone" operator="in" result="zonedStreak" />
+          <feTurbulence type="fractalNoise" baseFrequency="0.45" numOctaves="1" seed="5" result="speckNoise" />
+          <feColorMatrix in="speckNoise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  33.3 0 0 0 -24" result="speck" />
+          <feComposite in="zonedStreak" in2="speck" operator="arithmetic" k2="1" k3="1" result="wear" />
+          <feComponentTransfer in="wear" result="keep"><feFuncA type="table" tableValues="1 0" /></feComponentTransfer>
+          <feComposite in="rough" in2="keep" operator="in" />
+        </filter>
+      </svg>
+
+      <!-- Header -->
+      <div class="piece paper"><img src="/img/r/640/grain-1.webp" alt="" /></div>
+      <div class="piece logo"><img src="/img/r/600/logo.webp" alt="" /></div>
+
+      <!-- 1. The hero -->
+      <div class="piece st-geisha" data-scene="1" data-from="left"><img src="/img/r/480/stickers/sticker-5.webp" alt="" /></div>
+      <div class="piece st-bird" data-scene="1" data-from="left"><img src="/img/r/480/stickers/sticker-1.webp" alt="" /></div>
+      <div class="piece st-woman" data-scene="1" data-from="right"><img src="/img/r/480/stickers/sticker-3.webp" alt="" /></div>
+      <div class="piece st-slide" data-scene="1" data-from="right"><img src="/img/r/320/stickers/sticker-7.webp" alt="" /></div>
+      <div class="hero-poses">
+        <div class="piece pose"><img src="/img/r/800/portrait/tira-2-b.webp" alt="" /></div>
+        <div class="piece pose"><img src="/img/r/800/portrait/tira-4.webp" alt="" /></div>
+        <div class="piece pose"><img src="/img/r/800/portrait/tira-5.webp" alt="" /></div>
+        <div class="piece pose"><img src="/img/r/800/portrait/tira-7-b.webp" alt="" /></div>
+      </div>
+      <div class="title title--hero"><span class="line"><span class="ink">Ne csak</span></span><span class="line"><span class="ink">álmodozz!</span></span></div>
+      <div class="piece accent"><span>Varrjuk fel!<img src="/img/alahuzas.webp" alt="" /></span></div>
+      <div class="piece pi-smiley" data-scene="1p"><img src="/img/r/160/element-2.webp" alt="" /></div>
+      <div class="piece pi-heart" data-scene="1p"><img src="/img/r/160/element-5.webp" alt="" /></div>
+      <div class="piece pi-cat" data-scene="1p"><img src="/img/r/160/element-4.webp" alt="" /></div>
+
+      <!-- 2. The works, piled up, and three news photos on top -->
+      <div class="title title--works"><span class="line"><span class="ink">Munkáim</span></span></div>
+      <div class="piece pi-bandaid" data-scene="2p"><img src="/img/r/240/element-3.webp" alt="" /></div>
+      <div class="piece pi-wheart" data-scene="2p"><img src="/img/r/160/element-5.webp" alt="" /></div>
+      <div class="piece pi-wcrown" data-scene="2p"><img src="/img/r/160/element-1.webp" alt="" /></div>
+      <div class="cards">
+        <div class="piece card"><img src="/img/r/700/works/tattoo-4.webp" alt="" /></div>
+        <div class="piece card"><img src="/img/r/700/works/tattoo-9.webp" alt="" /></div>
+        <div class="piece card"><img src="/img/r/700/works/tattoo-14.webp" alt="" /></div>
+        <div class="piece card"><img src="/img/r/700/works/tattoo-2.webp" alt="" /></div>
+        <div class="piece card"><img src="/img/r/700/works/tattoo-10.webp" alt="" /></div>
+        <div class="piece card"><img src="/img/r/700/works/tattoo-12.webp" alt="" /></div>
+        <div class="piece card"><img src="/img/r/700/works/tattoo-8.webp" alt="" /></div>
+        <div class="piece card card--news"><img src="/img/news/news-3-3.webp" alt="" /></div>
+      </div>
+
+      <!-- 3. The contact -->
+      <div class="piece st-c2" data-scene="3" data-from="left"><img src="/img/r/400/stickers/sticker-2.webp" alt="" /></div>
+      <div class="piece st-c8" data-scene="3" data-from="left"><img src="/img/r/400/stickers/sticker-8.webp" alt="" /></div>
+      <div class="piece st-c9" data-scene="3" data-from="right"><img src="/img/r/400/stickers/sticker-9.webp" alt="" /></div>
+      <div class="piece st-c11" data-scene="3" data-from="right"><img src="/img/r/480/stickers/sticker-11.webp" alt="" /></div>
+      <div class="contact-poses">
+        <div class="piece pose pose--contact"><img src="/img/r/800/portrait/kapcsolat-1.webp" alt="" /></div>
+        <div class="piece pose pose--contact"><img src="/img/r/800/portrait/kapcsolat-3.webp" alt="" /></div>
+      </div>
+      <div class="title title--contact"><span class="line"><span class="ink">Mikor</span></span><span class="line"><span class="ink">jössz?</span></span></div>
+      <div class="piece pi-crown" data-scene="3p"><img src="/img/r/160/element-9.webp" alt="" /></div>
+      <div class="piece pi-catc" data-scene="3p"><span><img src="/img/r/160/element-4.webp" alt="" /><span class="note">Na?!</span></span></div>
+      <div class="piece mail"><span>krisztina.macsai@gmail.com</span></div>
+    </div>
+
+    <script src="/node_modules/gsap/dist/gsap.min.js"></script>
+    <script src="/video/reel.js"></script>
+  </body>
+</html>
